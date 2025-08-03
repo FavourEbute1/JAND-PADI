@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROFILE</title>
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background: #D0D5DD;
+color: #333;
+min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar-header{
+font-weight: bold;
+background: #4D1F96;
+}
+
+.sidebar-text{
+color: #E5E5E5;
+font-size: 32px;
+}
+
+.sidebar {
+position: fixed;
+left: 0;
+top: -10px;
+width: 15.625rem;
+height: 100vh;
+background: #4D1F96;
+padding: 3.5rem 1.625rem;
+gap: 10px;
+overflow-y: auto;
+z-index: 999;
+}
+
+.nav-item {
+display: flex;
+align-items: center;
+padding: 12px 20px;
+color: white;
+text-decoration: none;
+transition: background 0.3s;
+cursor: pointer;
+}
+
+.nav-item:hover {
+background: rgba(255, 255, 255, 0.432);
+}
+
+.nav-item.active {
+background: rgba(255, 255, 255, 0.514);
+}
+
+.nav-icon {
+width: 50px;
+height: 40px;
+position: relative;
+left: -10px;
+background-color: #b3b1b13a;
+margin-right: 12px;
+border-radius: 20px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 18px;
+}
+
+.nav-text {
+position: relative;
+align-items: center;
+left: -10px;
+font-size: 16px;
+width: 150px;
+height: 24px;
+font: Roboto;
+font-weight: 100;
+}
+
+/* Main Content - Responsive layout */
+.main-content {
+margin-left: 15.625rem; /* 250px */
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+}
+
+/* Dashboard Header - Responsive without fixed widths */
+.dashboard-header {
+background-color: white;
+height: 5.375rem; /* 86px */
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 0 2rem;
+box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.welcome-text {
+font-family: Roboto, sans-serif;
+font-size: 1.5rem;
+color: #4D1F96;
+font-weight: 400;
+}
+
+.header-right {
+display: flex;
+align-items: center;
+gap: 1.25rem;
+}
+
+.search-container {
+position: relative;
+}
+
+.search-input {
+padding: 0.625rem 2.5rem 0.625rem 0.9375rem;
+border: 1px solid #ddd;
+border-radius: 0.5rem;
+width: 18.75rem; /* 300px */
+font-size: 0.875rem;
+}
+
+.search-input:focus {
+border-color: #4D1F96;
+outline: none;
+}
+
+.search-icon {
+position: absolute;
+right: 0.9375rem;
+top: 50%;
+transform: translateY(-50%);
+color: #999;
+}
+
+.notification-icon {
+width: 2.5rem;
+height: 2.5rem;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+position: relative;
+font-size: 1.25rem;
+}
+
+.notification-dot {
+position: absolute;
+top: 0.5rem;
+right: 0.5rem;
+width: 0.5rem;
+height: 0.5rem;
+background: rgb(231, 69, 69);
+border-radius: 50%;
+}
+
+/* Profile Content - Flexible and responsive */
+.profile-content {
+flex: 1;
+padding: 2rem;
+}
+
+.profile-subtitle {
+color: #555555;
+font-size: 24px;
+margin-bottom: 2rem;
+}
+
+/* Profile Container - Responsive with max-width instead of fixed width */
+.profile-form-container {
+background: #f5f5f0;
+border-radius: 1rem;
+padding: 2.5rem;
+box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.profile-layout {
+display: grid;
+grid-template-columns: auto 1fr;
+gap: 176px;
+align-items: start;
+width: 1046px;
+height: 742px;
+}
+
+/* Profile Image Section */
+.profile-image-section {
+display: flex;
+flex-direction: column;
+align-items: center;
+min-width: 10rem;
+gap: 37px;
+}
+
+.profile-image {
+width: 7.5rem;
+height: 7.5rem;
+border-radius: 50%;
+background: #4D1F96;
+display: flex;
+align-items: center;
+justify-content: center;
+color: white;
+font-size: 3rem;
+margin-bottom: 1rem;
+overflow: hidden;
+position: relative;
+border: 3px solid white;
+box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.profile-image img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+
+.profile-name {
+font-weight: 600;
+font-size: 1.125rem;
+color: #333;
+margin-bottom: 1.25rem;
+text-align: center;
+}
+
+.image-buttons {
+display: flex;
+gap: 0.75rem;
+}
+
+.btn-outline {
+padding: 0.5rem 1rem;
+border: 2px solid #ddd;
+background: white;
+border-radius: 4px;
+cursor: pointer;
+font-size: 0.875rem;
+color: #666;
+transition: all 0.3s;
+}
+
+.btn-outline:hover {
+border-color: #4D1F96;
+color: #4D1F96;
+}
+
+/* Profile Fields - Responsive grid */
+.profile-fields {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+gap: 1.25rem;
+}
+
+.form-group {
+display: flex;
+flex-direction: column;
+}
+
+.form-group.full-width {
+grid-column: 1 / -1;
+}
+
+.form-label {
+font-size: 0.875rem;
+font-weight: 500;
+color: #333;
+margin-bottom: 0.5rem;
+}
+
+.form-input, .form-select {
+padding: 0.75rem;
+border: 2px solid #e0e0e0;
+border-radius: 4px;
+font-size: 0.875rem;
+background: white;
+transition: border-color 0.3s;
+}
+
+.form-input:focus, .form-select:focus {
+outline: none;
+border-color: #4D1F96;
+}
+
+.form-select {
+cursor: pointer;
+background-image: url(“data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e”);
+background-position: right 0.75rem center;
+background-repeat: no-repeat;
+background-size: 1rem;
+padding-right: 2.5rem;
+appearance: none
+}
+
+.save-button {
+background: #7A45D1;
+color: white;
+border: none;
+padding: 0.75rem 2rem;
+border-radius: 4px;
+font-size: 14px;
+font-weight: 400;
+cursor: pointer;
+transition: background 0.3s;
+grid-column: 1 / -1;
+justify-self: center;
+margin-top: 1.5rem;
+width: 352px;
+height: 54px;
+gap: 10px;
+text-transform: uppercase;
+letter-spacing: 0.05em;
+position: relative;
+top: 250px;
+left: -50px;
+}
+
+.save-button:hover {
+background: #3d1a7a;
+transform: translateY(-1px);
+box-shadow: 0 4px 12px rgba(77, 31, 150, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+.search-input {
+width: 15rem;
+}
+
+.profile-fields {
+grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+}
+
+@media (max-width: 768px) {
+.sidebar {
+transform: translateX(-100%);
+transition: transform 0.3s;
+}
+
+.sidebar.show {
+transform: translateX(0);
+}
+
+.main-content {
+margin-left: 0;
+}
+
+.dashboard-header {
+padding: 1rem;
+}
+
+.header-right {
+gap: 0.75rem;
+}
+
+.search-input {
+width: 12rem;
+}
+
+.welcome-text {
+font-size: 1.25rem;
+}
+
+.profile-content {
+padding: 1rem;
+}
+
+.profile-container,
+.profile-form-container {
+padding: 1.5rem;
+}
+
+.profile-layout {
+grid-template-columns: 1fr;
+gap: 1.5rem;
+text-align: center;
+}
+
+.profile-fields {
+grid-template-columns: 1fr;
+}
+}
+
+@media (max-width: 480px) {
+.dashboard-header {
+flex-direction: column;
+height: auto;
+padding: 1rem;
+gap: 1rem;
+}
+
+.header-right {
+width: 100%;
+justify-content: space-between;
+}
+
+.search-input {
+width: 100%;
+max-width: 15rem;
+}
+
+.profile-content {
+padding: 0.5rem;
+}
+
+.welcome-text {
+font-size: 1.125rem;
+}
+}
+
+/* Mobile sidebar toggle */
+.sidebar-toggle {
+display: none;
+position: fixed;
+top: 1rem;
+left: 1rem;
+z-index: 1001;
+background: #4D1F96;
+color: white;
+border: none;
+padding: 0.75rem;
+border-radius: 0.5rem;
+cursor: pointer;
+font-size: 1.25rem;
+}
+
+@media (max-width: 768px) {
+.sidebar-toggle {
+display: block;
+}
+}
+
+/* Loading animation for save button */
+.save-button.loading {
+pointer-events: none;
+opacity: 0.7;
+}
+
+.save-button.loading::after {
+content: “”;
+width: 1rem;
+height: 1rem;
+border: 2px solid transparent;
+border-top: 2px solid white;
+border-radius: 50%;
+animation: spin 1s linear infinite;
+display: inline-block;
+margin-left: 0.5rem;
+}
+
+@keyframes spin {
+0% { transform: rotate(0deg); }
+100% { transform: rotate(360deg); }
+}
+</style>
+
+</head>
+<body>
+
+<!-- Mobile Sidebar Toggle -->
+
+<button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+<!-- Sidebar -->
+
+<div class="sidebar" id="sidebar">
+<div style="color: #E5E5E5; font-size: 32px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">JAND PADI</div>
+<br>
+<a href="dashboard.html" class="nav-item">
+<div class="nav-icon">🔳</div>
+<div class="nav-text">Dashboard</div>
+</a>
+<a href="morningbrief.html" class="nav-item">
+<div class="nav-icon">📰</div>
+<div class="nav-text">Morning Brief</div>
+</a>
+<a href="taskviewer.html" class="nav-item">
+<div class="nav-icon">📋</div>
+<div class="nav-text">Task Viewer</div>
+</a>
+<a href="timezone.html" class="nav-item">
+<div class="nav-icon">🕗</div>
+<div class="nav-text">Time & Location</div>
+</a>
+<a href="currencytools.html" class="nav-item">
+<div class="nav-icon">$</div>
+<div class="nav-text">Currency Tools</div>
+</a>
+
+<br><br><br><br><br><br><br><br>
+<div class="nav-spacer"></div>
+<a href="settings.html" class="nav-item">
+<div class="nav-icon">⚙</div>
+<div class="nav-text">Settings</div>
+</a>
+<div class="nav-item active">
+<div class="nav-icon">👨‍💼</div>
+<div class="nav-text">Marcus Jones</div>
+</div>
+</div>
+
+<!-- Main Content -->
+
+<div class="main-content">
+<!-- Dashboard Header -->
+<div class="dashboard-header">
+<div class="welcome-text">🌞 GOOD MORNING, MARCUS</div>
+<div class="header-right">
+<div class="search-container">
+<input type="text" class="search-input" placeholder="Search" id="searchInput">
+<div class="search-icon">🔍</div>
+</div>
+<div class="notification-icon">
+🔔
+<div class="notification-dot"></div>
+</div>
+</div>
+</div>
+
+<!-- Profile Content -->
+
+<div class="profile-content">
+<div class="profile-subtitle">Manage your personal information and preferences</div>
+
+<div class="profile-container">
+<div class="profile-form-container">
+<div class="profile-layout">
+<div class="profile-image-section">
+<div class="profile-image" id="profileImage">
+    <img src="Ellipse 10.svg" alt="Profile Image">
+</div>
+<div class="profile-name" id="profileName">Marcus Jones</div>
+<div class="image-buttons">
+<button class="btn-outline" onclick="uploadImage()">Upload</button>
+<button class="btn-outline" onclick="removeImage()">Delete avatar</button>
+</div>
+</div>
+
+<div class="profile-fields">
+<div class="form-group">
+<label class="form-label">First Name</label>
+<input type="text" class="form-input" value="Marcus" id="firstName" required>
+</div>
+
+<div class="form-group">
+<label class="form-label">Last Name</label>
+<input type="text" class="form-input" value="Jones" id="lastName" required>
+</div>
+
+<div class="form-group">
+<label class="form-label">Email Address</label>
+<input type="email" class="form-input" value="marcusjones@gmail.com" id="email" required>
+</div>
+
+<div class="form-group">
+<label class="form-label">Country</label>
+<select class="form-select" id="country">
+<option value="US" selected>United States</option>
+<option value="NG">Nigeria</option>
+<option value="UK">United Kingdom</option>
+<option value="CA">Canada</option>
+<option value="AU">Australia</option>
+<option value="DE">Germany</option>
+<option value="FR">France</option>
+<option value="JP">Japan</option>
+<option value="CN">China</option>
+<option value="IN">India</option>
+<option value="BR">Brazil</option>
+<option value="ZA">South Africa</option>
+</select>
+</div>
+
+<div class="form-group">
+<label class="form-label">Time Zone</label>
+<select class="form-select" id="timezone">
+<option value="GMT-1" selected>GMT-1</option>
+<option value="GMT+0">GMT+0 (London)</option>
+<option value="GMT+1">GMT+1 (Lagos)</option>
+<option value="GMT+8">GMT+8 (Beijing)</option>
+<option value="UTC-8">UTC-8 (Los Angeles)</option>
+<option value="UTC-5">UTC-5 (New York)</option>
+<option value="UTC+0">UTC+0 (London)</option>
+<option value="UTC+1">UTC+1 (Berlin)</option>
+<option value="UTC+3">UTC+3 (Moscow)</option>
+<option value="UTC+5:30">UTC+5:30 (Mumbai)</option>
+<option value="UTC+9">UTC+9 (Tokyo)</option>
+</select>
+</div>
+
+<div class="form-group">
+<label class="form-label">Currency</label>
+<select class="form-select" id="currency">
+<option value="USD" selected>USD</option>
+<option value="NGN">NGN</option>
+<option value="EUR">EUR</option>
+<option value="GBP">GBP</option>
+<option value="CAD">CAD</option>
+<option value="AUD">AUD</option>
+<option value="JPY">JPY</option>
+<option value="CNY">CNY</option>
+<option value="INR">INR</option>
+<option value="BRL">BRL</option>
+<option value="ZAR">ZAR</option>
+</select>
+</div>
+
+<button class="save-button" onclick="saveProfile()" id="saveBtn">Save changes</button>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+function toggleSidebar() {
+const sidebar = document.getElementById('sidebar');
+sidebar.classList.toggle('show');
+}
+
+function uploadImage() {
+const input = document.createElement('input');
+input.type = 'file';
+input.accept = 'image/*';
+input.onchange = function(e) {
+const file = e.target.files[0];
+if (file) {
+if (file.size > 5 * 1024 * 1024) {
+alert('File size should be less than 5MB');
+return;
+}
+
+const reader = new FileReader();
+reader.onload = function(event) {
+const profileImage = document.getElementById('profileImage');
+profileImage.innerHTML = `<img src="${event.target.result}" alt="Profile Picture">`;
+};
+reader.readAsDataURL(file);
+}
+};
+input.click();
+}
+
+function removeImage() {
+const profileImage = document.getElementById('profileImage');
+profileImage.innerHTML = '👨‍💼';
+}
+
+function saveProfile() {
+const saveBtn = document.getElementById('saveBtn');
+const firstName = document.getElementById('firstName').value;
+const lastName = document.getElementById('lastName').value;
+const email = document.getElementById('email').value;
+const country = document.getElementById('country').value;
+const timezone = document.getElementById('timezone').value;
+const currency = document.getElementById('currency').value;
+
+// Validation
+if (!firstName || !lastName || !email) {
+alert('Please fill in all required fields');
+return;
+}
+
+if (!email.includes('@')) {
+alert('Please enter a valid email address');
+return;
+}
+
+// Show loading state
+saveBtn.classList.add('loading');
+saveBtn.textContent = 'Saving';
+
+// Simulate API call
+setTimeout(() => {
+// Update profile name display
+document.getElementById('profileName').textContent = `${firstName} ${lastName}`;
+
+// Remove loading state
+saveBtn.classList.remove('loading');
+saveBtn.textContent = 'Save changes';
+
+// Show success message
+alert('Profile updated successfully!');
+
+console.log('Profile saved:', {
+firstName,
+lastName,
+email,
+country,
+timezone,
+currency
+});
+}, 2000);
+}
+
+// Real-time name update
+function updateProfileName() {
+const firstName = document.getElementById('firstName').value;
+const lastName = document.getElementById('lastName').value;
+document.getElementById('profileName').textContent = `${firstName} ${lastName}`;
+}
+
+document.getElementById('firstName').addEventListener('input', updateProfileName);
+document.getElementById('lastName').addEventListener('input', updateProfileName);
+
+// Search functionality
+document.getElementById('searchInput').addEventListener('input', function(e) {
+const searchTerm = e.target.value.toLowerCase();
+console.log('Searching for:', searchTerm);
+// Add your search logic here
+});
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', function(e) {
+const sidebar = document.getElementById('sidebar');
+const toggle = document.querySelector('.sidebar-toggle');
+
+if (window.innerWidth <= 768 &&
+!sidebar.contains(e.target) &&
+!toggle.contains(e.target) &&
+sidebar.classList.contains('show')) {
+sidebar.classList.remove('show');
+}
+});
+
+// Form validation on input
+const inputs = document.querySelectorAll('.form-input, .form-select');
+inputs.forEach(input => {
+input.addEventListener('blur', function() {
+if (this.hasAttribute('required') && !this.value) {
+this.style.borderColor = '#ff4444';
+} else {
+this.style.borderColor = '#e0e0e0';
+}
+});
+});
+
+// Initialize the page
+document.addEventListener('DOMContentLoaded', function() {
+console.log('✅ Profile page initialized successfully!');
+});
+</script>
+
+</body>
+</html>

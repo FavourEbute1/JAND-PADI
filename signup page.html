@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGNUP PAGE</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+    body {
+        font-family: Roboto;
+        background:#D0D5DD;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .signup-container {
+        width: 618px;
+        max-width: 804px;
+        background: white;
+        border-radius: 20px;
+        padding: 50px;
+        margin-bottom: 20px;
+        animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .header {
+        position: relative;
+        top: auto;
+        left: -165px;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .header h1 {
+        width: 528px;
+        height: 36px;
+        font-style: medium;
+        font-size: 28px;
+        color: #050404;
+        font-weight: 400;
+        vertical-align: middle;
+    }
+
+    .header p {
+        position: relative;
+        top: auto;
+        left: 80px;
+        width: 528px;
+        height: 20px;
+        font-style: medium;
+        font-size: 14px;
+        color: #D0D5DD;
+        font-size: 14px;
+    }
+
+    .form-row{
+        display: flex;
+        gap: 15px;
+    }
+
+    .form-row .form-group {
+        flex: 1;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .password-row {
+        display: flex;
+        gap: 15px;
+        align-items: flex-end;
+    }
+
+    .form-row .form-group {
+        flex: 1;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+        color: #242323;
+        font-weight: 500;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e1e5e9;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .password-input-container{
+        position: relative;
+    }
+
+    .password-row .form-group{
+        flex: 1;
+    }
+
+    .password-row .form-group label {
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .password-toggle{
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #666;
+        font-size: 16px;
+    }
+
+    .password-toggle:hover{
+        color: #667eea;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    input.error {
+        border-color: #ff4757;
+        background: #fff5f5;
+    }
+
+    .error-message {
+        color: #ff4757;
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+    }
+
+    .password-strength {
+        margin-top: 5px;
+        font-size: 12px;
+    }
+
+    .strength-weak {
+        color: #ff4757;
+    }
+
+    .strength-medium {
+        color: #ffa502;
+    }
+
+    .strength-strong {
+        color: #2ed573;
+    }
+
+    .checkbox-group {
+        text-align: center;
+        margin: 60px auto;
+        width: 618px;
+        display: block;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+        display: none;
+    }
+
+    .checkbox-group label {
+        margin-bottom: 0;
+        font-family: roboto;
+        font-size: 14px;
+        font-weight: 400;
+        color: #131010;
+        line-height: 1.6;
+        text-align: center;
+        margin-top: -5px;
+    }
+
+    .checkbox-group label a {
+        color: #667eea;
+        text-decoration: none;
+    }
+
+    .checkbox-group label a:hover {
+        text-decoration: underline;
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 14px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
+    .btn-primary:hover {
+        background: #5a6fd8;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+
+    .divider {
+        margin: 20px 0;
+        text-align: center;
+        position: relative;
+        color: #242323;
+        font-size: 14px;
+        font-size: 400;
+        font-family: Plus Jakarta Sans;
+    }
+
+    .divider::before,
+    .divider::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        height: 2px;
+        background: #242323;
+        width: 10%;
+    }
+
+    .divider::before {
+        left: 35%;
+    }
+
+    .divider::after {
+        right: 35%;
+    }
+
+    .divider span {
+        background: white;
+        padding: 0 15px;
+    }
+
+    .social-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .btn-social {
+        width: 176px;
+        height: 44px;
+        flex: 1;
+        padding: 12px;
+        border: 2px solid #e1e5e9;
+        border-radius: 8px;
+        background: white;
+        color: #666;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .btn-social:hover {
+        border-color: #667eea;
+        color: #667eea;
+        transform: translateY(-2px);
+    }
+
+    .btn-google {
+        background-color: #FF6969;
+        color: #F2F2F2;
+    }
+
+    .btn-google:hover {
+        border-color: #db4437;
+        color: #db4437;
+    }
+
+    .btn-facebook {
+        background-color: #506CE9;
+        color: #F2F2F2;
+    }
+
+    .btn-facebook:hover {
+        border-color: #4267b2;
+        color: #4267b2;
+    }
+
+    .btn-instagram {
+        background-color: #8845B8;
+        color: #F2F2F2;
+    }
+
+    .btn-instagram:hover {
+        border-color: #1da1f2;
+        color: #1da1f2;
+    }
+
+    .privacy-policy{
+        text-align: center;
+        font-size: 12px;
+        color: #666;
+        margin-top: 20px;
+        line-height: 1.4;
+    }
+
+    .privacy-policy a{
+        color: #667eea;
+        text-decoration: none;
+    }
+
+    .privacy-policy a:hover{
+        text-decoration: underline;
+    }
+
+    .login-link {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .login-link a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 480px) {
+        .signup-container {
+            padding: 30px 20px;
+        }
+
+        .form-row {
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .social-buttons {
+            flex-direction: column;
+        }
+    }
+</style>
+
+</head>
+<body>
+    <div class="signup-container">
+       
+    <div class="header">
+        <h1>Create an account</h1>
+        <p>Enter your details to get started with your smart daily dashboard</p>
+    </div>
+
+    <form id="signupForm">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" required>
+                <span class="error-message" id="firstNameError"></span>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" required>
+                <span class="error-message" id="lastNameError"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required>
+            <span class="error-message" id="emailError"></span>
+        </div>
+
+        <div class="password-row">
+        <div class="form-group">
+            <label for="password">Password</label>
+            <div class="password-input-container">
+                <input type="password" id="password" name="password" required>
+                <button type="button" class="password-toggle" id="passwordToggle">👁</button>
+            </div>
+            <span class="password-strength" id="passwordStrength"></span>
+            <span class="error-message" id="passwordError"></span></div>
+
+        <div class="form-group">
+            <label for="confirmPassword">Repeat Password</label>
+            <div class="password-input-container">
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                <button type="button" class="password-toggle" id="confirmPasswordToogle">👁</button>
+            </div>
+            <span class="error-message" id="confirmPasswordError"></span>
+        </div>
+        </div>
+    
+    
+        <button type="submit" class="btn-primary" id="signupBtn">Create Account</button>
+    </form>
+
+    <div class="divider">
+        <span>Or</span>
+    </div>
+
+    <div class="social-buttons">
+        <button type="button" class="btn-social btn-google" onclick="window.open('https://google.com', '_blank')">
+            <img src="google icon.svg" alt="">Google</button>
+        <button type="button" class="btn-social btn-facebook" onclick="window.open('https://facebook.com', '_blank')">
+            <img src="facebook icon.svg" alt="">Facebook</button>
+        <button type="button" class="btn-social btn-instagram" onclick="window.open('https://instagram.com', '_blank')">
+            <img src="instagram icon.svg" alt="">Instagram</button>
+    </div>
+
+    <div class="login-link">
+        Already have an account? <a href="dashboard.html">Sign in</a>
+    </div>
+</div>
+    <div class="checkbox-group">
+            <label for="terms">By continuing to register/create an account, you consent to have read and agreed to Jand Padi
+                <br>
+                <a href="#">privacy policy</a> and <a href="#">terms & condition</a></label>
+        </div>
+
+
+
+<script>
+    class SignUpForm {
+        constructor() {
+            this.form = document.getElementById('signupForm');
+            this.init();
+        }
+
+        init() {
+            this.setupEventListeners();
+        }
+
+        setupEventListeners() {
+            this.form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.handleSubmit();
+            });
+
+            // Real-time validation
+            document.getElementById('firstName').addEventListener('blur', () => {
+                this.validateFirstName();
+            });
+
+            document.getElementById('lastName').addEventListener('blur', () => {
+                this.validateLastName();
+            });
+
+            document.getElementById('email').addEventListener('blur', () => {
+                this.validateEmail();
+            });
+
+            document.getElementById('password').addEventListener('input', () => {
+                this.checkPasswordStrength();
+            });
+
+            document.getElementById('password').addEventListener('blur', () => {
+                this.validatePassword();
+            });
+
+            document.getElementById('confirmPassword').addEventListener('blur', () => {
+                this.validateConfirmPassword();
+            });
+
+            // Social login buttons
+            document.querySelectorAll('.btn-social').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const provider = e.target.textContent.trim().split(' ')[1];
+                    this.handleSocialLogin(provider);
+                });
+            });
+        }
+
+        validateFirstName() {
+            const firstName = document.getElementById('firstName');
+            const error = document.getElementById('firstNameError');
+            
+            if (!firstName.value.trim()) {
+                this.showError(firstName, error, 'First name is required');
+                return false;
+            } else if (firstName.value.trim().length < 2) {
+                this.showError(firstName, error, 'First name must be at least 2 characters');
+                return false;
+            } else {
+                this.clearError(firstName, error);
+                return true;
+            }
+        }
+
+        validateLastName() {
+            const lastName = document.getElementById('lastName');
+            const error = document.getElementById('lastNameError');
+            
+            if (!lastName.value.trim()) {
+                this.showError(lastName, error, 'Last name is required');
+                return false;
+            } else if (lastName.value.trim().length < 2) {
+                this.showError(lastName, error, 'Last name must be at least 2 characters');
+                return false;
+            } else {
+                this.clearError(lastName, error);
+                return true;
+            }
+        }
+
+        validateEmail() {
+            const email = document.getElementById('email');
+            const error = document.getElementById('emailError');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!email.value.trim()) {
+                this.showError(email, error, 'Email address is required');
+                return false;
+            } else if (!emailRegex.test(email.value)) {
+                this.showError(email, error, 'Please enter a valid email address');
+                return false;
+            } else {
+                this.clearError(email, error);
+                return true;
+            }
+        }
+
+        validatePassword() {
+            const password = document.getElementById('password');
+            const error = document.getElementById('passwordError');
+            
+            if (!password.value) {
+                this.showError(password, error, 'Password is required');
+                return false;
+            } else if (password.value.length < 8) {
+                this.showError(password, error, 'Password must be at least 8 characters');
+                return false;
+            } else {
+                this.clearError(password, error);
+                return true;
+            }
+        }
+
+        validateConfirmPassword() {
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirmPassword');
+            const error = document.getElementById('confirmPasswordError');
+            
+            if (!confirmPassword.value) {
+                this.showError(confirmPassword, error, 'Please confirm your password');
+                return false;
+            } else if (password.value !== confirmPassword.value) {
+                this.showError(confirmPassword, error, 'Passwords do not match');
+                return false;
+            } else {
+                this.clearError(confirmPassword, error);
+                return true;
+            }
+        }
+
+        checkPasswordStrength() {
+            const password = document.getElementById('password').value;
+            const strengthIndicator = document.getElementById('passwordStrength');
+            
+            if (password.length === 0) {
+                strengthIndicator.textContent = '';
+                return;
+            }
+            
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[a-z]/.test(password)) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            if (strength <= 2) {
+                strengthIndicator.textContent = 'Weak password';
+                strengthIndicator.className = 'password-strength strength-weak';
+            } else if (strength <= 4) {
+                strengthIndicator.textContent = 'Medium password';
+                strengthIndicator.className = 'password-strength strength-medium';
+            } else {
+                strengthIndicator.textContent = 'Strong password';
+                strengthIndicator.className = 'password-strength strength-strong';
+            }
+        }
+
+        showError(input, errorElement, message) {
+            input.classList.add('error');
+            errorElement.textContent = message;
+        }
+
+        clearError(input, errorElement) {
+            input.classList.remove('error');
+            errorElement.textContent = '';
+        }
+
+        handleSubmit() {
+            const isValid = this.validateFirstName() && 
+                          this.validateLastName() && 
+                          this.validateEmail() && 
+                          this.validatePassword() && 
+                          this.validateConfirmPassword();
+
+            const terms = document.getElementById('terms').checked;
+            if (!terms) {
+                alert('Please accept the Terms of Service and Privacy Policy');
+                return;
+            }
+
+            if (isValid) {
+                const btn = document.getElementById('signupBtn');
+                btn.disabled = true;
+                btn.textContent = 'Creating Account...';
+                
+                // Simulate API call
+                setTimeout(() => {
+                    alert('Account created successfully! Redirecting to email verification...');
+                    // window.location.href = '/verify-email';
+                }, 2000);
+            }
+        }
+
+        handleSocialLogin(provider) {
+            alert(`Signing up with ${provider}...`);
+        }
+    }
+
+    // Initialize the form
+    document.addEventListener('DOMContentLoaded', () => {
+        new SignUpForm();
+    });
+</script>
+
+</body>
+</html>

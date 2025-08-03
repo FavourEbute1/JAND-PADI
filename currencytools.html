@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CURRENCY TOOLS</title>
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background: #D0D5DD;
+color: #333;
+}
+/* Sidebar */
+.sidebar-header{
+font-weight: bold;
+background: #4D1F96;
+}
+
+.sidebar-text{
+color: #E5E5E5;
+font-size: 32px;
+}
+
+.sidebar {
+position: fixed;
+left: 0;
+top: -10px;
+width: 15.625rem;
+height: 100vh;
+background: #4D1F96;
+padding: 3.5rem 1.625rem;
+gap: 10px;
+overflow-y: auto;
+z-index: 999;
+}
+
+.nav-item {
+display: flex;
+align-items: center;
+padding: 12px 20px;
+color: white;
+text-decoration: none;
+transition: background 0.3s;
+cursor: pointer;
+}
+
+.nav-item:hover {
+background: rgba(255, 255, 255, 0.432);
+}
+
+.nav-item.active {
+background: rgba(255, 255, 255, 0.514);
+}
+
+.nav-icon {
+width: 50px;
+height: 40px;
+position: relative;
+left: -10px;
+background-color: #b3b1b13a;
+margin-right: 12px;
+border-radius: 20px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 18px;
+}
+
+.nav-text {
+position: relative;
+align-items: center;
+left: -10px;
+font-size: 16px;
+width: 150px;
+height: 24px;
+font: Roboto;
+font-weight: 100;
+}
+
+/* Main Content */
+.main-content {
+margin-left: 15.625rem;
+padding: 0;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+}
+
+/* Dashboard Header*/
+.dashboard-header {
+background-color: white;
+height: 5.375rem; /* 86px */
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 0 2rem;
+box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.welcome-text {
+font-family: Roboto, sans-serif;
+font-size: 1.5rem;
+color: #4D1F96;
+font-weight: 400;
+}
+
+.header-right {
+display: flex;
+align-items: center;
+gap: 1.25rem;
+}
+
+.search-container {
+position: relative;
+}
+
+.search-input {
+padding: 0.625rem 2.5rem 0.625rem 0.9375rem;
+border: 1px solid #ddd;
+border-radius: 0.5rem;
+width: 18.75rem; /* 300px */
+font-size: 0.875rem;
+}
+
+.search-input:focus {
+border-color: #4D1F96;
+outline: none;
+}
+
+.search-icon {
+position: absolute;
+right: 0.9375rem;
+top: 50%;
+transform: translateY(-50%);
+color: #999;
+}
+
+.notification-icon {
+width: 2.5rem;
+height: 2.5rem;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+position: relative;
+font-size: 1.25rem;
+}
+
+.notification-dot {
+position: absolute;
+top: 0.5rem;
+right: 0.5rem;
+width: 0.5rem;
+height: 0.5rem;
+background: rgb(231, 69, 69);
+border-radius: 50%;
+}
+
+/* Currency Tools */
+.page-header {
+margin-bottom: 30px;
+}
+
+.breadcrumb {
+font-size: 14px;
+color: #666;
+margin-bottom: 10px;
+}
+
+.page-title {
+font-size: 24px;
+color: #7A45D1;
+font-weight: 600;
+}
+
+/* Currency Converter Section */
+.converter-section {
+position: relative;
+top: 20px;
+width: 938px;
+height: 386px;
+background: white;
+border-radius: 12px;
+padding: 25px;
+margin-bottom: 30px;
+}
+
+.converter-title {
+font-size: 22px;
+color: black;
+margin-bottom: 20px;
+font-weight: 600;
+}
+
+.amount-input-container {
+margin-bottom: 20px;
+}
+
+.amount-label {
+display: block;
+font-size: 14px;
+color: black;
+margin-bottom: 8px;
+font-weight: 500;
+}
+
+.amount-input {
+width: 782px;
+height: 62px;
+padding: 12px;
+border: 2px solid #e9ecef;
+border-radius: 8px;
+font-size: 16px;
+background: #D0D5DD;
+transition: border-color 0.3s;
+}
+
+.amount-input:focus {
+outline: none;
+border-color: #7A45D1;
+}
+
+.currency-row {
+width: 782px;
+height: 62px;   
+border-radius: 8px;
+background: #D0D5DD; 
+display: flex;
+align-items: center;
+gap: 230px;
+margin-bottom: 20px;
+}
+
+.currency-select-container {
+display: flex;
+align-items: center;
+flex: 1;
+}
+
+.flag-icon {
+width: 30px;
+height: 30px;
+margin-right: 10px;
+border-radius: 3px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 14px;
+}
+
+.flag-usd { background: linear-gradient(to bottom, #b22234 0%, #b22234 46%, #ffffff 46%, #ffffff 54%, #b22234 54%); }
+.flag-ngn { background: linear-gradient(to right, #008751 33%, #ffffff 33%, #ffffff 67%, #008751 67%); }
+.flag-eur { background: #003399; }
+.flag-gbp { background: linear-gradient(45deg, #012169 25%, #ffffff 25%); }
+
+.currency-select {
+padding: 10px 15px;
+border: 2px solid #e9ecef;
+border-radius: 8px;
+background: white;
+font-size: 14px;
+font-weight: 500;
+cursor: pointer;
+min-width: 100px;
+transition: border-color 0.3s;
+}
+
+.currency-select:focus {
+outline: none;
+border-color: #1f9682;
+}
+
+.swap-button {
+background: white;
+color: black;
+border: none;
+width: 40px;
+height: 40px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+font-size: 16px;
+transition: background 0.3s;
+}
+
+.swap-button:hover {
+background: #7A45D1;
+}
+
+.conversion-result {
+width: 500px;    
+background: white;
+padding: 0px;
+text-align: center;
+margin-bottom: 0px;
+}
+
+.result-amount {
+width: 500px;
+height: 88px;   
+font-size: 36px;
+font-weight: medium;
+color: #7A45D1;
+margin-bottom: 0px;
+}
+
+.exchange-rate {  
+font-size: 18px;
+font-weight: medium;
+color: black;
+margin-left: -50px;
+padding: none;
+}
+
+/* Tracked Currency Pairs */
+.tracked-section {
+width: 938px;
+height: 210px;
+background: white;
+border-radius: 12px;
+padding: 25px;
+margin-bottom: 30px;
+margin-bottom: 30px;
+}
+
+.section-title {
+font-size: 22px;
+color: black;
+margin-bottom: 15px;
+font-weight: 600;
+}
+
+.tracked-pairs {
+display: grid;
+gap: 12px;
+}
+
+.currency-pair {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 15px;
+background: #f8f9fa;
+border-radius: 8px;
+border: 1px solid #e9ecef;
+}
+
+.pair-info {
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.pair-flags {
+display: flex;
+gap: 5px;
+}
+
+.pair-name {
+font-weight: 500;
+color: #333;
+}
+
+.pair-rate {
+font-weight: 600;
+color: #7A45D1;
+}
+
+.rate-change {
+padding: 4px 8px;
+border-radius: 12px;
+font-size: 12px;
+font-weight: 500;
+}
+
+.rate-up {
+background: #d4edda;
+color: #155724;
+}
+
+.rate-down {
+background: #f8d7da;
+color: #721c24;
+}
+
+/* Conversion History */
+.history-section {
+width: 938px;
+height: 380px;
+background: white;
+border-radius: 12px;
+padding: 25px;
+margin-bottom: 30px;
+background: #f8f9fa;
+border-radius: 12px;
+padding: 20px;
+}
+
+.history-item {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 12px 0;
+border-bottom: 1px solid #e9ecef;
+}
+
+.history-item:last-child {
+border-bottom: none;
+}
+
+.history-date {
+font-size: 12px;
+color: black;
+}
+
+.history-conversion {
+font-size: 14px;
+color: black;
+}
+
+.loading {
+text-align: center;
+padding: 20px;
+color: #666;
+}
+
+.loading-spinner {
+border: 2px solid #f3f3f3;
+border-top: 2px solid #7A45D1;
+border-radius: 50%;
+width: 20px;
+height: 20px;
+animation: spin 1s linear infinite;
+margin: 0 auto 10px;
+}
+
+@keyframes spin {
+0% { transform: rotate(0deg); }
+100% { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+.sidebar {
+transform: translateX(-100%);
+transition: transform 0.3s;
+}
+
+.main-content {
+margin-left: 0;
+}
+
+.currency-row {
+flex-direction: column;
+gap: 15px;
+}
+
+.swap-button {
+transform: rotate(90deg);
+}
+}
+
+</style>
+
+</head>
+<body>
+
+<!-- Sidebar -->
+
+<div class="sidebar" id="sidebar">
+<div style="color: #E5E5E5; font-size: 32px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">JAND PADI</div>
+<br>
+<a href="dashboard.html" class="nav-item">
+<div class="nav-icon">🔳</div>
+<div class="nav-text">Dashboard</div>
+</a>
+<a href="morningbrief.html" class="nav-item">
+<div class="nav-icon">📰</div>
+<div class="nav-text">Morning Brief</div>
+</a>
+<a href="taskviewer.html" class="nav-item">
+<div class="nav-icon">📋</div>
+<div class="nav-text">Task Viewer</div>
+</a>
+<a href="timezone.html" class="nav-item">
+<div class="nav-icon">🕗</div>
+<div class="nav-text">Time & Location</div>
+</a>
+<a href="currencytools.html" class="nav-item active">
+<div class="nav-icon">$</div>
+<div class="nav-text">Currency Tools</div>
+</a>
+<br><br><br><br><br><br><br><br>
+<a href="settings.html" class="nav-item">
+<div class="nav-icon">⚙</div>
+<div class="nav-text">Settings</div>
+</a>
+<div class="nav-item">
+<div class="nav-icon">👨‍💼</div>
+<div class="nav-text">Marcus Jones</div>
+</div>
+</div>
+
+<!-- Main Content -->
+
+<div class="main-content">
+<!-- Dashboard Header -->
+<div class="dashboard-header">
+<div class="welcome-text">🌞 GOOD MORNING, MARCUS</div>
+<div style="display: flex; align-items: center; gap: 20px;">
+<div class="search-container">
+<input type="text" class="search-input" placeholder="Search your preferred Currency" id="searchInput">
+<div class="search-icon">🔍</div>
+</div>
+<div class="notification-icon">
+🔔
+<div class="notification-dot"></div>
+</div>
+</div>
+</div>
+
+
+<!-- Currency Converter -->
+<div class="converter-section">
+<h2 class="converter-title">Currency Tracker & Converter</h2>
+
+<div class="amount-input-container">
+<label class="amount-label">Enter Amount</label>
+<input type="number" class="amount-input" id="amountInput" value="1000" placeholder="Enter amount">
+</div>
+
+<div class="currency-row">
+<div class="currency-select-container">
+<div class="flag-icon flag-usd">🇺🇸</div>
+<select class="currency-select" id="fromCurrency">
+<option value="USD">USD</option>
+<option value="EUR">EUR</option>
+<option value="GBP">GBP</option>
+<option value="NGN">NGN</option>
+<option value="JPY">JPY</option>
+<option value="CAD">CAD</option>
+<option value="AUD">AUD</option>
+</select>
+</div>
+
+<button class="swap-button" onclick="swapCurrencies()" title="Swap currencies">⇄</button>
+
+<div class="currency-select-container">
+<div class="flag-icon flag-ngn">🇳🇬</div>
+<select class="currency-select" id="toCurrency">
+<option value="NGN">NGN</option>
+<option value="USD">USD</option>
+<option value="EUR">EUR</option>
+<option value="GBP">GBP</option>
+<option value="JPY">JPY</option>
+<option value="CAD">CAD</option>
+<option value="AUD">AUD</option>
+</select>
+</div>
+</div>
+
+<div class="conversion-result" id="conversionResult">
+<div class="result-amount">1,000 USD = 1,537,440 NGN</div>
+<div class="exchange-rate">Exchange rate: 1 USD = 1,537,440 NGN</div>
+</div>
+</div>
+
+<!-- Tracked Currency Pairs -->
+<div class="tracked-section">
+<h3 class="section-title">Tracked Currency Pairs</h3>
+<div class="tracked-pairs">
+<div class="currency-pair">
+<div class="pair-info">
+<div class="pair-flags">
+<div class="flag-icon flag-usd"></div>
+<div class="flag-icon flag-eur"></div>
+</div>
+<span class="pair-name">USD / EUR</span>
+</div>
+<div style="display: flex; align-items: center; gap: 10px;">
+<span class="pair-rate">1.15</span>
+<span class="rate-change rate-down">↓</span>
+</div>
+</div>
+
+<div class="currency-pair">
+<div class="pair-info">
+<div class="pair-flags">
+<div class="flag-icon flag-usd"></div>
+<div class="flag-icon flag-ngn"></div>
+</div>
+<span class="pair-name">USD / NGN</span>
+</div>
+<div style="display: flex; align-items: center; gap: 10px;">
+<span class="pair-rate">1,537,440</span>
+<span class="rate-change rate-up">↑</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Conversion History -->
+<div class="history-section">
+<h3 class="section-title">Conversion History</h3>
+<div id="conversionHistory">
+<div class="history-item">
+<div>
+<div class="history-conversion">500 USD → 768 NGN</div>
+<div class="history-date">Apr 5, 2025 - 11:30 AM</div>
+</div>
+</div>
+<div class="history-item">
+<div>
+<div class="history-conversion">2,000 USD → 3,074,880 NGN</div>
+<div class="history-date">Apr 4, 2025 - 9:45 AM</div>
+</div>
+</div>
+<div class="history-item">
+<div>
+<div class="history-conversion">2,000 USD → 3,074,880 NGN</div>
+<div class="history-date">Apr 4, 2025 - 9:25 AM</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+
+<script> 
+const YOUR_API_KEY = '09c0654b01634f71ba89cbd7163ee0cd';
+
+// Exchange rates - will be populated by API
+let exchangeRates = {
+'USD': { 'NGN': 1537.44, 'EUR': 0.85, 'GBP': 0.73, 'JPY': 110, 'CAD': 1.25, 'AUD': 1.35 },
+'EUR': { 'USD': 1.18, 'NGN': 1814.58, 'GBP': 0.86, 'JPY': 129.5, 'CAD': 1.47, 'AUD': 1.59 },
+'GBP': { 'USD': 1.37, 'EUR': 1.16, 'NGN': 2106.31, 'JPY': 150.7, 'CAD': 1.71, 'AUD': 1.85 },
+'NGN': { 'USD': 0.00065, 'EUR': 0.00055, 'GBP': 0.00047, 'JPY': 0.071, 'CAD': 0.00081, 'AUD': 0.00088 },
+'JPY': { 'USD': 0.0091, 'EUR': 0.0077, 'GBP': 0.0066, 'NGN': 13.98, 'CAD': 0.011, 'AUD': 0.012 },
+'CAD': { 'USD': 0.80, 'EUR': 0.68, 'GBP': 0.58, 'NGN': 1229.95, 'JPY': 88, 'AUD': 1.08 },
+'AUD': { 'USD': 0.74, 'EUR': 0.63, 'GBP': 0.54, 'NGN': 1138.85, 'JPY': 81.5, 'CAD': 0.93 }
+};
+
+// Conversion history array
+let conversionHistory = [
+{ amount: 500, from: 'USD', to: 'NGN', result: 768720, date: '2025-04-05T11:30:00' },
+{ amount: 2000, from: 'USD', to: 'NGN', result: 3074880, date: '2025-04-04T09:45:00' },
+{ amount: 2000, from: 'USD', to: 'NGN', result: 3074880, date: '2025-04-04T09:25:00' }
+];
+
+// Get DOM elements
+const amountInput = document.getElementById('amountInput');
+const fromCurrency = document.getElementById('fromCurrency');
+const toCurrency = document.getElementById('toCurrency');
+const conversionResult = document.getElementById('conversionResult');
+
+// FETCH EXCHANGE RATES FROM API
+async function fetchExchangeRates() {
+try {
+// Show loading
+conversionResult.innerHTML = `
+<div class="loading">
+<div class="loading-spinner"></div>
+Fetching latest rates...
+</div>
+`;
+
+const response = await fetch(`c`);
+
+if (!response.ok) {
+throw new Error('API request failed');
+}
+
+const data = await response.json();
+
+// Update exchange rates with API data
+if (data.conversion_rates) {
+exchangeRates['USD'] = data.conversion_rates;
+} else if (data.rates) {
+exchangeRates['USD'] = data.rates;   
+} else {
+    throw new Error('Invalid API response format');
+}
+
+// Calculate reverse rates for other currencies
+const rates= data.conversion_rates || data.rates;
+Object.keys(rates).forEach(currency => {
+if (currency !== 'USD') {
+if (!exchangeRates[currency]) exchangeRates[currency] = {};
+exchangeRates[currency]['USD'] = 1 / rates[currency];
+
+// Calculate cross rates
+Object.keys(data.conversion_rates).forEach(otherCurrency => {
+if (otherCurrency !== currency) {
+exchangeRates[currency][otherCurrency] = rates[otherCurrency] / rates[currency];
+}
+});
+}
+});
+
+console.log('✅ Exchange rates updated from API');
+convertCurrency(); // Refresh conversion with new rates
+
+} catch (error) {
+console.error('❌ Error fetching exchange rates:', error);
+
+// Show error message
+conversionResult.innerHTML = `
+<div style="color: #721c24; background: #f8d7da; padding: 15px; border-radius: 8px;">
+<strong>API Error:</strong> Using offline rates. Please check your API key.
+</div>
+`;
+
+// Use fallback rates and convert
+setTimeout(() => {
+convertCurrency();
+}, 2000);
+}
+}
+
+// Convert currency
+function convertCurrency() {
+const amount = parseFloat(amountInput.value) || 0;
+const from = fromCurrency.value;
+const to = toCurrency.value;
+
+if (from === to) {
+updateResult(amount, from, to, amount, 1);
+return;
+}
+
+// Get exchange rate
+let rate = 1;
+if (exchangeRates[from] && exchangeRates[from][to]) {
+rate = exchangeRates[from][to];
+}
+
+const result = amount * rate;
+updateResult(amount, from, to, result, rate);
+
+// Add to history
+if (amount > 0) {
+addToHistory(amount, from, to, result);
+}
+}
+
+// Update result display
+function updateResult(amount, from, to, result, rate) {
+const formattedAmount = amount.toLocaleString();
+const formattedResult = result.toLocaleString(undefined, {
+minimumFractionDigits: 2,
+maximumFractionDigits: 2
+});
+
+conversionResult.innerHTML = `
+<div class="result-amount">${formattedAmount} ${from} = ${formattedResult} ${to}</div>
+<div class="exchange-rate">Exchange rate: 1 ${from} = ${rate.toLocaleString()} ${to}</div>
+`;
+}
+
+// Swap currencies
+function swapCurrencies() {
+const fromValue = fromCurrency.value;
+const toValue = toCurrency.value;
+
+fromCurrency.value = toValue;
+toCurrency.value = fromValue;
+
+// Update flag icons
+updateFlagIcons();
+convertCurrency();
+}
+
+// Update flag icons based on selected currencies
+function updateFlagIcons() {
+const flags = {
+'USD': '🇺🇸',
+'EUR': '🇪🇺',
+'GBP': '🇬🇧',
+'NGN': '🇳🇬',
+'JPY': '🇯🇵',
+'CAD': '🇨🇦',
+'AUD': '🇦🇺'
+};
+
+const fromFlag = document.querySelector('.currency-row').children[0].querySelector('.flag-icon');
+const toFlag = document.querySelector('.currency-row').children[2].querySelector('.flag-icon');
+
+fromFlag.textContent = '';
+toFlag.textContent = '';
+}
+
+// Add conversion to history
+function addToHistory(amount, from, to, result) {
+const historyItem = {
+amount: amount,
+from: from,
+to: to,
+result: result,
+date: new Date().toISOString()
+};
+
+conversionHistory.unshift(historyItem);
+
+// Keep only last 5 conversions
+if (conversionHistory.length > 5) {
+conversionHistory = conversionHistory.slice(0, 5);
+}
+
+updateHistoryDisplay();
+}
+
+// Update history display
+function updateHistoryDisplay() {
+const historyContainer = document.getElementById('conversionHistory');
+
+historyContainer.innerHTML = conversionHistory.map(item => {
+const date = new Date(item.date);
+const formattedDate = date.toLocaleDateString('en-US', {
+month: 'short',
+day: 'numeric',
+year: 'numeric'
+}) + ' - ' + date.toLocaleTimeString('en-US', {
+hour: 'numeric',
+minute: '2-digit',
+hour12: true
+});
+
+return `
+<div class="history-item">
+<div>
+<div class="history-conversion">${item.amount.toLocaleString()} ${item.from} → ${item.result.toLocaleString()} ${item.to}</div>
+<div class="history-date">${formattedDate}</div>
+</div>
+</div>
+`;
+}).join('');
+}
+
+// Event listeners
+amountInput.addEventListener('input', convertCurrency);
+fromCurrency.addEventListener('change', () => {
+updateFlagIcons();
+convertCurrency();
+});
+toCurrency.addEventListener('change', () => {
+updateFlagIcons();
+convertCurrency();
+});
+
+// Search functionality
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+if (e.key === 'Enter') {
+const searchTerm = e.target.value.trim().toUpperCase();
+if (searchTerm.length === 3) {
+// Try to find and select the currency
+const options = Array.from(fromCurrency.options);
+const foundOption = options.find(option => option.value === searchTerm);
+if (foundOption) {
+fromCurrency.value = searchTerm;
+updateFlagIcons();
+convertCurrency();
+}
+}
+}
+});
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+updateFlagIcons();
+convertCurrency();
+updateHistoryDisplay();
+
+// FETCH REAL-TIME RATES ON PAGE LOAD 
+fetchExchangeRates();
+
+// UPDATE RATES EVERY 5 MINUTES
+setInterval(fetchExchangeRates, 5 * 60 * 1000);
+});
+</script>
+
+</body>
+</html>
