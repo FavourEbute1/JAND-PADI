@@ -212,8 +212,8 @@ font-weight: 500;
 }
 
 .amount-input {
-width: 782px;
-height: 62px;
+width: 100%;
+height: 67px;
 padding: 12px;
 border: 2px solid #e9ecef;
 border-radius: 8px;
@@ -228,7 +228,7 @@ border-color: #7A45D1;
 }
 
 .currency-row {
-width: 782px;
+width: 100%;
 height: 62px;   
 border-radius: 8px;
 background: #D0D5DD; 
@@ -239,8 +239,9 @@ margin-bottom: 20px;
 }
 
 .currency-select-container {
+width: 100%;
 display: flex;
-align-items: center;
+justify-content: center;
 flex: 1;
 }
 
@@ -297,7 +298,7 @@ background: #7A45D1;
 }
 
 .conversion-result {
-width: 500px;    
+width: 100%;    
 background: white;
 padding: 0px;
 text-align: center;
@@ -307,7 +308,7 @@ margin-bottom: 0px;
 .result-amount {
 width: 500px;
 height: 88px;   
-font-size: 36px;
+font-size: 30px;
 font-weight: medium;
 color: #7A45D1;
 margin-bottom: 0px;
@@ -448,24 +449,72 @@ margin: 0 auto 10px;
 100% { transform: rotate(360deg); }
 }
 
-/* Responsive */
+/* Mobile Menu Toggle */
+.mobile-menu-toggle {
+display: none;
+position: fixed;
+top: 20px;
+left: 20px;
+z-index: 1001;
+background: #4D1F96;
+color: white;
+border: none;
+padding: 10px 12px;
+border-radius: 8px;
+cursor: pointer;
+font-size: 18px;
+}
+
+/* Responsive Design Updates */
 @media (max-width: 768px) {
+.mobile-menu-toggle {
+display: block;
+}
+
 .sidebar {
-transform: translateX(-100%);
-transition: transform 0.3s;
+transform: translateX(-100%) !important;
+transition: transform 0.3s ease !important;
+}
+
+.sidebar.show {
+transform: translateX(0) !important;
 }
 
 .main-content {
-margin-left: 0;
+margin-left: 0 !important;
 }
 
-.currency-row {
-flex-direction: column;
-gap: 15px;
+.dashboard-header {
+padding: 0 1rem !important;
 }
 
-.swap-button {
-transform: rotate(90deg);
+.search-input {
+width: 150px !important;
+font-size: 12px !important;
+}
+
+.welcome-text {
+font-size: 16px !important;
+}
+
+.notification-icon {
+width: 35px !important;
+height: 35px !important;
+font-size: 16px !important;
+}
+}
+
+@media (max-width: 480px) {
+.dashboard-header {
+padding: 0 0.5rem !important;
+}
+
+.search-input {
+width: 120px !important;
+}
+
+.welcome-text {
+font-size: 14px !important;
 }
 }
 
@@ -499,7 +548,7 @@ transform: rotate(90deg);
 <div class="nav-icon">$</div>
 <div class="nav-text">Currency Tools</div>
 </a>
-<br><br><br><br><br><br><br><br>
+<div style="margin: 180px 0;"></div>
 <a href="settings.html" class="nav-item">
 <div class="nav-icon">⚙</div>
 <div class="nav-text">Settings</div>
@@ -885,6 +934,58 @@ fetchExchangeRates();
 
 // UPDATE RATES EVERY 5 MINUTES
 setInterval(fetchExchangeRates, 5 * 60 * 1000);
+});
+
+// Mobile menu toggle
+function toggleMobileMenu() {
+const sidebar = document.getElementById('sidebar');
+const toggle = document.getElementById('mobileMenuToggle');
+sidebar.classList.toggle('show');
+toggle.textContent = sidebar.classList.contains('show') ? '✕' : '☰';
+}
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', function(e) {
+const sidebar = document.getElementById('sidebar');
+const toggle = document.getElementById('mobileMenuToggle');
+
+if (window.innerWidth <= 768 &&
+!sidebar.contains(e.target) &&
+!toggle.contains(e.target) &&
+sidebar.classList.contains('show')) {
+sidebar.classList.remove('show');
+toggle.textContent = '☰';
+}
+});
+
+// Universal search functionality
+function handleSearch(searchTerm) {
+const term = searchTerm.toLowerCase();
+if (term.includes('news') || term.includes('brief')) {
+window.location.href = 'morningbrief.html';
+} else if (term.includes('currency') || term.includes('money')) {
+window.location.href = 'currencytools.html';
+} else if (term.includes('task')) {
+window.location.href = 'taskviewer.html';
+} else if (term.includes('time') || term.includes('weather')) {
+window.location.href = 'timezone.html';
+} else if (term.includes('setting')) {
+window.location.href = 'settings.html';
+} else if (term.includes('profile')) {
+window.location.href = 'profilepage.html';
+} else {
+alert(`Search results for: "${searchTerm}"`);
+}
+}
+
+// Update search event listener
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+if (e.key === 'Enter') {
+const searchTerm = e.target.value.trim();
+if (searchTerm) {
+handleSearch(searchTerm);
+}
+}
 });
 </script>
 

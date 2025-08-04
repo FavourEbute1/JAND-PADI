@@ -497,7 +497,7 @@ margin-left: 0.5rem;
 <div class="nav-text">Currency Tools</div>
 </a>
 
-<br><br><br><br><br><br><br><br>
+<div style="margin: 180px 0;"></div>
 <div class="nav-spacer"></div>
 <a href="settings.html" class="nav-item">
 <div class="nav-icon">⚙</div>
@@ -750,6 +750,59 @@ this.style.borderColor = '#e0e0e0';
 document.addEventListener('DOMContentLoaded', function() {
 console.log('✅ Profile page initialized successfully!');
 });
+
+// Mobile menu toggle
+function toggleMobileMenu() {
+const sidebar = document.getElementById('sidebar');
+const toggle = document.getElementById('mobileMenuToggle');
+sidebar.classList.toggle('show');
+toggle.textContent = sidebar.classList.contains('show') ? '✕' : '☰';
+}
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', function(e) {
+const sidebar = document.getElementById('sidebar');
+const toggle = document.getElementById('mobileMenuToggle');
+
+if (window.innerWidth <= 768 &&
+!sidebar.contains(e.target) &&
+!toggle.contains(e.target) &&
+sidebar.classList.contains('show')) {
+sidebar.classList.remove('show');
+toggle.textContent = '☰';
+}
+});
+
+// Universal search functionality
+function handleSearch(searchTerm) {
+const term = searchTerm.toLowerCase();
+if (term.includes('news') || term.includes('brief')) {
+window.location.href = 'morningbrief.html';
+} else if (term.includes('currency') || term.includes('money')) {
+window.location.href = 'currencytools.html';
+} else if (term.includes('task')) {
+window.location.href = 'taskviewer.html';
+} else if (term.includes('time') || term.includes('weather')) {
+window.location.href = 'timezone.html';
+} else if (term.includes('setting')) {
+window.location.href = 'settings.html';
+} else if (term.includes('profile')) {
+window.location.href = 'profilepage.html';
+} else {
+alert(`Search results for: "${searchTerm}"`);
+}
+}
+
+// Update search event listener
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+if (e.key === 'Enter') {
+const searchTerm = e.target.value.trim();
+if (searchTerm) {
+handleSearch(searchTerm);
+}
+}
+});
+
 </script>
 
 </body>

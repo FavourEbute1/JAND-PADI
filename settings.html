@@ -191,7 +191,7 @@ background: #D4D9E130;
 padding: 10px 20px;
 margin-bottom: 50px;
 height: 403px;
-width: 366px;
+width: 100%;
 gap: 38px;
 position: relative;
 top: 50px;
@@ -377,35 +377,72 @@ gap: 30px;
 align-items: start;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-.settings-grid {
-grid-template-columns: 1fr;
-}
-}
-
-@media (max-width: 768px) {
-.sidebar {
-transform: translateX(-100%);
-transition: transform 0.3s;
-}
-
-.main-content {
-margin-left: 0;
-}
-
-.search-input {
-width: 200px;
-}
-
-.welcome-text {
-left: 50px;
+/* Mobile Menu Toggle */
+.mobile-menu-toggle {
+display: none;
+position: fixed;
+top: 20px;
+left: 20px;
+z-index: 1001;
+background: #4D1F96;
+color: white;
+border: none;
+padding: 10px 12px;
+border-radius: 8px;
+cursor: pointer;
 font-size: 18px;
 }
 
-.settings-container {
-margin: 10px;
-padding: 20px;
+/* Responsive Design Updates */
+@media (max-width: 768px) {
+.mobile-menu-toggle {
+display: block;
+}
+
+.sidebar {
+transform: translateX(-100%) !important;
+transition: transform 0.3s ease !important;
+}
+
+.sidebar.show {
+transform: translateX(0) !important;
+}
+
+.main-content {
+margin-left: 0 !important;
+}
+
+.dashboard-header {
+padding: 0 1rem !important;
+}
+
+.search-input {
+width: 150px !important;
+font-size: 12px !important;
+}
+
+.welcome-text {
+font-size: 16px !important;
+}
+
+.notification-icon {
+width: 35px !important;
+height: 35px !important;
+font-size: 16px !important;
+}
+}
+
+@media (max-width: 480px) {
+.dashboard-header {
+padding: 0 0.5rem !important;
+}
+
+.search-input {
+width: 120px !important;
+}
+
+.welcome-text {
+font-size: 14px !important;
 }
 }
 
@@ -439,7 +476,7 @@ padding: 20px;
 <div class="nav-icon">$</div>
 <div class="nav-text">Currency Tools</div>
 </a>
-<br><br><br><br><br><br><br><br>
+<div style="margin: 180px 0;"></div>
 <a href="settings.html" class="nav-item active">
 <div class="nav-icon">⚙</div>
 <div class="nav-text">Settings</div>
@@ -770,6 +807,59 @@ settingsData = JSON.parse(savedSettings);
 console.log('Loaded saved settings:', settingsData);
 }
 });
+
+// Mobile menu toggle
+function toggleMobileMenu() {
+const sidebar = document.getElementById('sidebar');
+const toggle = document.getElementById('mobileMenuToggle');
+sidebar.classList.toggle('show');
+toggle.textContent = sidebar.classList.contains('show') ? '✕' : '☰';
+}
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', function(e) {
+const sidebar = document.getElementById('sidebar');
+const toggle = document.getElementById('mobileMenuToggle');
+
+if (window.innerWidth <= 768 &&
+!sidebar.contains(e.target) &&
+!toggle.contains(e.target) &&
+sidebar.classList.contains('show')) {
+sidebar.classList.remove('show');
+toggle.textContent = '☰';
+}
+});
+
+// Universal search functionality
+function handleSearch(searchTerm) {
+const term = searchTerm.toLowerCase();
+if (term.includes('news') || term.includes('brief')) {
+window.location.href = 'morningbrief.html';
+} else if (term.includes('currency') || term.includes('money')) {
+window.location.href = 'currencytools.html';
+} else if (term.includes('task')) {
+window.location.href = 'taskviewer.html';
+} else if (term.includes('time') || term.includes('weather')) {
+window.location.href = 'timezone.html';
+} else if (term.includes('setting')) {
+window.location.href = 'settings.html';
+} else if (term.includes('profile')) {
+window.location.href = 'profilepage.html';
+} else {
+alert(`Search results for: "${searchTerm}"`);
+}
+}
+
+// Update search event listener
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+if (e.key === 'Enter') {
+const searchTerm = e.target.value.trim();
+if (searchTerm) {
+handleSearch(searchTerm);
+}
+}
+});
+
 </script>
 
 </body>

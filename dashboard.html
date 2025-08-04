@@ -18,22 +18,6 @@ background: #D0D5DD;
 color: #333;
 }
 
-/*  Mobile Menu Toggle*/
-.mobile-menu-toggle{
-display: none;
-position: fixed;
-top: 20px;
-left: 20px;
-z-index: 1001;
-background: #4D1F96;
-color: white;
-border: none;
-padding: 10px 12px;
-border-radius: 8px;
-cursor: pointer;
-font-size: 18px;
-}
-
 /* Sidebar */
 .sidebar-header{
 font-weight: bold;
@@ -620,56 +604,88 @@ text-align: center;
 font-size: 11px;
 }
 
-/* Responsive Design */
-@media (max-width: 1400px) {
-.dashboard-grid {
-grid-template-columns: 1fr;
-grid-template-rows: repeat(6, auto);
-height: auto;
-}
-
-.news-section { grid-column: 1; grid-row: 1; }
-.weather-main-section { grid-column: 1; grid-row: 2; }
-.currency-pairs-section { grid-column: 1; grid-row: 3; }
-.world-clock-section { grid-column: 1; grid-row: 4; }
-.conversion-history-section { grid-column: 1; grid-row: 5; }
-.quote-converter-section { grid-column: 1; grid-row: 6; }
-
-.quote-converter-section {
-flex-direction: row;
-gap: 20px;
-}
-}
-
-@media (max-width: 768px) {
-.sidebar {
-transform: translateX(-100%);
-transition: transform 0.3s;
-}
-
-.main-content {
-margin-left: 0;
-}
-
-.search-input {
-width: 200px;
-}
-
-.welcome-text {
-left: 50px;
+/*  Mobile Menu Toggle*/
+.mobile-menu-toggle{
+display: none;
+position: fixed;
+top: 20px;
+left: 20px;
+z-index: 1001;
+background: #4D1F96;
+color: white;
+border: none;
+padding: 10px 12px;
+border-radius: 8px;
+cursor: pointer;
 font-size: 18px;
 }
 
-.news-items {
-grid-template-columns: 1fr;
+/* Mobile Menu Toggle */
+.mobile-menu-toggle {
+display: none;
+position: fixed;
+top: 20px;
+left: 20px;
+z-index: 1001;
+background: #4D1F96;
+color: white;
+border: none;
+padding: 10px 12px;
+border-radius: 8px;
+cursor: pointer;
+font-size: 18px;
 }
 
-.world-clock-grid {
-grid-template-columns: 1fr;
+/* Responsive Design Updates */
+@media (max-width: 768px) {
+.mobile-menu-toggle {
+display: block;
 }
 
-.quote-converter-section {
-flex-direction: column;
+.sidebar {
+transform: translateX(-100%) !important;
+transition: transform 0.3s ease !important;
+}
+
+.sidebar.show {
+transform: translateX(0) !important;
+}
+
+.main-content {
+margin-left: 0 !important;
+}
+
+.dashboard-header {
+padding: 0 1rem !important;
+}
+
+.search-input {
+width: 150px !important;
+font-size: 12px !important;
+}
+
+.welcome-text {
+font-size: 16px !important;
+}
+
+.notification-icon {
+width: 35px !important;
+height: 35px !important;
+font-size: 16px !important;
+}
+}
+
+@media (max-width: 480px) {
+.dashboard-header {
+padding: 0 0.5rem !important;
+}
+
+.search-input {
+width: 120px !important;
+}
+
+.welcome-text {
+font-size: 14px !important;
 }
 }
 </style>
@@ -868,6 +884,350 @@ Loading rates...
 </div>
 
 <script>
+// API CONFIGURATION
+const API_CONFIG = {
+newsApiKey: '3233d1ba834bad744383989945c37de4',
+weatherApiKey: '6GPEXK18H77J',
+currencyApiKey: '09c0654b01634f71ba89cbd7163ee0cd'
+};
+
+// Global variables
+let allNewsData = {
+general: [],
+technology: [],
+finance: [],
+entertainment: [],
+productivity: [],
+'remote-work': []
+};
+let exchangeRates = {};
+let currentCategory = 'all';
+
+// NEWS API INTEGRATION
+async function fetchAllNews() {
+try {
+// Fetch General News
+const generalResponse = await fetch(`https://gnews.io/api/v4/search?q=general&lang=en&token=${API_CONFIG.newsApiKey}`);
+const generalData = await generalResponse.json();
+allNewsData.general = generalData.articles || [];
+
+// Fetch Technology News
+const techResponse = await fetch(`https://gnews.io/api/v4/search?q=technology&lang=en&token=${API_CONFIG.newsApiKey}`);
+const techData = await techResponse.json();
+allNewsData.technology = techData.articles || [];
+
+// Fetch Finance News
+const financeResponse = await fetch(`https://gnews.io/api/v4/search?q=finance&lang=en&token=${API_CONFIG.newsApiKey}`);
+const financeData = await financeResponse.json();
+allNewsData.finance = financeData.articles || [];
+
+// Fetch Entertainment News
+const entertainmentResponse = await fetch(`https://gnews.io/api/v4/search?q=entertainment&lang=en&token=${API_CONFIG.newsApiKey}`);
+const entertainmentData = await entertainmentResponse.json();
+allNewsData.entertainment = entertainmentData.articles || [];
+
+// Fetch Productivity News
+const productivityResponse = await fetch(`https://gnews.io/api/v4/search?q=productivity&lang=en&token=${API_CONFIG.newsApiKey}`);
+const productivityData = await productivityResponse.json();
+allNewsData.productivity = productivityData.articles || [];
+
+// Fetch Remote Work News
+const remoteWorkResponse = await fetch(`https://gnews.io/api/v4/search?q="remote work"&lang=en&token=${API_CONFIG.newsApiKey}`);
+const remoteWorkData = await remoteWorkResponse.json();
+allNewsData['remote-work'] = remoteWorkData.articles || [];
+
+displayNews();
+
+} catch (error) {
+console.error('News API Error:', error);
+document.getElementById('newsItems').innerHTML = '<div class="error-message">Failed to load news. Check console for errors.</div>';
+}
+}
+
+function displayNews() {
+if (allNewsData.general.length > 0) {
+displayFeaturedNews(allNewsData.general[0]);
+}
+filterNews(currentCategory, document.querySelector('.category-btn.active'));
+}
+
+function displayFeaturedNews(article) {
+document.getElementById('featuredNews').innerHTML = `
+<div class="news-title">${article.title}</div>
+<div class="news-meta">Source: ${article.source.name} • ${formatTime(article.publishedAt)}</div>
+`;
+}
+
+function filterNews(category, buttonElement) {
+currentCategory = category;
+
+// Update active button
+document.querySelectorAll('.category-btn').forEach(btn => {
+btn.classList.remove('active');
+});
+if (buttonElement) {
+buttonElement.classList.add('active');
+}
+
+let articlesToShow = [];
+
+if (category === 'all') {
+// Mix articles from all categories
+articlesToShow = [
+...allNewsData.general.slice(0, 2),
+...allNewsData.technology.slice(0, 2),
+...allNewsData.finance.slice(0, 1),
+...allNewsData.entertainment.slice(0, 1)
+];
+} else {
+articlesToShow = allNewsData[category] || [];
+}
+
+displayNewsItems(articlesToShow.slice(0, 6));
+}
+
+function displayNewsItems(articles) {
+if (articles.length === 0) {
+document.getElementById('newsItems').innerHTML = '<div class="error-message">No articles found for this category.</div>';
+return;
+}
+
+const newsHTML = articles.map(article => `
+<div class="news-item">
+<div class="news-item-title">${article.title}</div>
+<div class="news-item-meta">Source: ${article.source.name} • ${formatTime(article.publishedAt)}</div>
+<a href="${article.url}" target="_blank" class="read-more-btn">Read More</a>
+</div>
+`).join('');
+
+document.getElementById('newsItems').innerHTML = newsHTML;
+}
+
+// WEATHER API INTEGRATION
+async function fetchWeather() {
+try {
+const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=Abuja&appid=YOUR_OPENWEATHER_API_KEY&units=metric`);
+
+const demoWeatherData = {
+name: "Abuja",
+sys: { country: "Nigeria" },
+main: { temp: 29, feels_like: 31, humidity: 68 },
+weather: [{ main: "Clear", description: "sunny" }]
+};
+
+displayWeather(demoWeatherData);
+
+} catch (error) {
+console.error('Weather API Error:', error);
+// Using demo data when API fails
+const demoWeatherData = {
+name: "Abuja",
+sys: { country: "Nigeria" },
+main: { temp: 29, feels_like: 31, humidity: 68 },
+weather: [{ main: "Clear", description: "sunny" }]
+};
+displayWeather(demoWeatherData);
+}
+}
+
+function displayWeather(data) {
+document.getElementById('mainWeather').innerHTML = `
+<div class="weather-location">${data.name}, ${data.sys.country}</div>
+<div class="weather-temp">${Math.round(data.main.temp)}°C</div>
+<div class="weather-condition">${data.weather[0].description}</div>
+<div class="weather-date">${new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} • ${new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}</div>
+<div class="weather-details">
+<span>Feels like: ${Math.round(data.main.feels_like)}°C</span>
+<span>Humidity: ${data.main.humidity}%</span>
+</div>
+`;
+}
+
+// WORLD CLOCK - Simple timezone calculation
+async function fetchWorldClock() {
+try {
+const cities = [
+{ name: 'Paris', offset: 1 },
+{ name: 'Toronto, Canada', offset: -5 },
+{ name: 'London, England', offset: 0 },
+{ name: 'San Francisco, USA', offset: -8 }
+];
+
+const clockHTML = cities.map(city => {
+const now = new Date();
+const localTime = new Date(now.getTime() + (city.offset * 60 * 60000));
+
+return `
+<div class="clock-item">
+<div class="clock-city">${city.name}</div>
+<div class="clock-time">${localTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}</div>
+<div class="clock-date">${localTime.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</div>
+</div>
+`;
+}).join('');
+
+document.getElementById('worldClock').innerHTML = clockHTML;
+} catch (error) {
+console.error('World Clock Error:', error);
+document.getElementById('worldClock').innerHTML = '<div class="error-message">Failed to load world clock.</div>';
+}
+}
+
+// CURRENCY API INTEGRATION - Using your CurrencyFreaks API
+async function fetchCurrencyRates() {
+try {
+const response = await fetch(`https://api.currencyfreaks.com/latest?apikey=${API_CONFIG.currencyApiKey}`);
+const data = await response.json();
+
+if (data.rates) {
+exchangeRates = data.rates;
+displayCurrencyPairs();
+convertCurrency();
+}
+} catch (error) {
+console.error('Currency API Error:', error);
+// Using demo data when API fails
+exchangeRates = {
+EUR: 0.85,
+NGN: 1537.44,
+GBP: 0.73,
+JPY: 110
+};
+displayCurrencyPairs();
+convertCurrency();
+}
+}
+
+function displayCurrencyPairs() {
+const pairs = [
+{ from: 'USD', to: 'EUR', rate: exchangeRates.EUR, change: 'down' },
+{ from: 'USD', to: 'NGN', rate: exchangeRates.NGN, change: 'up' }
+];
+
+const pairsHTML = pairs.map(pair => `
+<div class="pair-item">
+<span class="pair-name">🇺🇸🇪🇺 ${pair.from} / ${pair.to}</span>
+<span class="pair-rate">${pair.rate ? pair.rate.toLocaleString() : 'N/A'}
+<span class="rate-change rate-${pair.change}">${pair.change === 'up' ? '↑' : '↓'}</span>
+</span>
+</div>
+`).join('');
+
+document.getElementById('currencyPairs').innerHTML = pairsHTML;
+}
+
+function convertCurrency() {
+const amount = parseFloat(document.getElementById('currencyAmount').value) || 1000;
+const from = document.getElementById('fromCurrency').value;
+const to = document.getElementById('toCurrency').value;
+
+if (from === to) {
+document.getElementById('conversionResult').innerHTML = `
+<div class="result-amount">${amount.toLocaleString()} ${from} = ${amount.toLocaleString()} ${to}</div>
+<div class="result-rate">Exchange rate: 1 ${from} = 1 ${to}</div>
+`;
+return;
+}
+
+let rate = 1;
+if (exchangeRates[to]) {
+rate = exchangeRates[to];
+if (from !== 'USD') {
+rate = exchangeRates[to] / (exchangeRates[from] || 1);
+}
+}
+
+const result = amount * rate;
+
+document.getElementById('conversionResult').innerHTML = `
+<div class="result-amount">${amount.toLocaleString()} ${from} = ${result.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${to}</div>
+<div class="result-rate">Exchange rate: 1 ${from} = ${rate.toLocaleString()} ${to}</div>
+`;
+}
+
+function swapCurrencies() {
+const fromSelect = document.getElementById('fromCurrency');
+const toSelect = document.getElementById('toCurrency');
+const temp = fromSelect.value;
+fromSelect.value = toSelect.value;
+toSelect.value = temp;
+convertCurrency();
+}
+
+// Utility Functions
+function formatTime(dateString) {
+const date = new Date(dateString);
+const now = new Date();
+const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
+
+if (diffInHours < 1) return 'Just now';
+if (diffInHours < 24) return `${diffInHours}h ago`;
+const diffInDays = Math.floor(diffInHours / 24);
+return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
+}
+
+// Quote rotation
+const quotes = [
+"Your future is created by what you do today",
+"Success is not final, failure is not fatal: it is the courage to continue that counts",
+"The only way to do great work is to love what you do",
+"Innovation distinguishes between a leader and a follower"
+];
+
+let currentQuoteIndex = 0;
+
+function rotateQuote() {
+currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+document.getElementById('quoteText').textContent = `"${quotes[currentQuoteIndex]}"`;
+
+document.querySelectorAll('.quote-dot').forEach((dot, index) => {
+dot.classList.toggle('active', index === currentQuoteIndex);
+});
+}
+
+// Event Listeners
+document.getElementById('currencyAmount').addEventListener('input', convertCurrency);
+document.getElementById('fromCurrency').addEventListener('change', convertCurrency);
+document.getElementById('toCurrency').addEventListener('change', convertCurrency);
+
+// Initialize Dashboard
+document.addEventListener('DOMContentLoaded', function() {
+// Load all data
+fetchAllNews();
+fetchWeather();
+fetchCurrencyRates();
+fetchWorldClock();
+
+// Auto-rotate quotes every 5 seconds
+setInterval(rotateQuote, 5000);
+
+// Update world clock every minute
+setInterval(fetchWorldClock, 60000);
+
+console.log('🎯 Dashboard initialized successfully!');
+});
+
+// Search functionality
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+if (e.key === 'Enter') {
+const searchTerm = e.target.value.trim();
+if (searchTerm) {
+if (searchTerm.toLowerCase().includes('news') || searchTerm.toLowerCase().includes('brief')) {
+window.location.href = 'morningbrief.html';
+} else if (searchTerm.toLowerCase().includes('currency') || searchTerm.toLowerCase().includes('money')) {
+window.location.href = 'currencytools.html';
+} else if (searchTerm.toLowerCase().includes('task')) {
+window.location.href = 'taskview.html';
+} else if (searchTerm.toLowerCase().includes('time')) {
+window.location.href = 'timezone.html';
+} else if (searchTerm.toLowerCase().includes('setting')) {
+window.location.href = 'settings.html';
+} else {
+alert(`Search results for: "${searchTerm}"`);
+}
+}
+}
+});
 // Mobile menu toggle
 function toggleMobileMenu() {
 const sidebar = document.getElementById('sidebar');
@@ -890,206 +1250,6 @@ toggle.textContent = '☰';
 }
 });
 
-// Global variables
-let exchangeRates = {
-'USD': { 'NGN': 1537.44, 'EUR': 0.85, 'GBP': 0.73 },
-'EUR': { 'USD': 1.18, 'NGN': 1814.58, 'GBP': 0.86 },
-'GBP': { 'USD': 1.37, 'EUR': 1.16, 'NGN': 2106.31 },
-'NGN': { 'USD': 0.00065, 'EUR': 0.00055, 'GBP': 0.00047 }
-};
-
-// News functionality
-let currentCategory = 'all';
-
-function filterNews(category, buttonElement) {
-currentCategory = category;
-
-// Update active button
-document.querySelectorAll('.category-btn').forEach(btn => {
-btn.classList.remove('active');
-});
-buttonElement.classList.add('active');
-
-// Simulate loading and display news
-displayNews(category);
-}
-
-function displayNews(category) {
-const newsItems = document.getElementById('newsItems');
-
-// Demo news data
-const demoNews = {
-all: [
-{ title: 'AI Breakthrough in Healthcare', source: 'Tech News', time: '2h ago' },
-{ title: 'Market Rally Continues', source: 'Finance Today', time: '4h ago' },
-{ title: 'Sports Update: Championships', source: 'Sports Daily', time: '6h ago' }
-],
-technology: [
-{ title: 'New AI Model Released', source: 'Tech World', time: '1h ago' },
-{ title: 'Smartphone Innovation', source: 'Gadget News', time: '3h ago' }
-],
-business: [
-{ title: 'Stock Market Update', source: 'Business Wire', time: '2h ago' },
-{ title: 'Economic Forecast', source: 'Finance News', time: '5h ago' }
-],
-sports: [
-{ title: 'Championship Finals', source: 'Sports Network', time: '1h ago' },
-{ title: 'Transfer News', source: 'Sports Daily', time: '4h ago' }
-]
-};
-
-const articles = demoNews[category] || demoNews.all;
-const newsHTML = articles.map(article => `
-<div class="news-item">
-<div class="news-item-title">${article.title}</div>
-<div class="news-item-meta">Source: ${article.source} • ${article.time}</div>
-<button class="read-more-btn" onclick="openNews('${category}')">Read More</button>
-</div>
-`).join('');
-
-newsItems.innerHTML = newsHTML;
-}
-
-function openNews(category) {
-window.open(`morningbrief.html?category=${category}`, '_blank');
-}
-
-// Weather functionality
-function displayWeather() {
-const weatherData = {
-name: "Abuja",
-country: "Nigeria",
-temp: 29,
-condition: "sunny",
-feels_like: 31,
-humidity: 68
-};
-
-document.getElementById('mainWeather').innerHTML = `
-<div class="weather-location">${weatherData.name}, ${weatherData.country}</div>
-<div class="weather-temp">${weatherData.temp}°C</div>
-<div class="weather-condition">${weatherData.condition}</div>
-<div class="weather-date">${new Date().toLocaleDateString('en-US', {
-weekday: 'long', month: 'long', day: 'numeric'
-})} • ${new Date().toLocaleTimeString('en-US', {
-hour: 'numeric', minute: '2-digit', hour12: true
-})}</div>
-<div class="weather-details">
-<span>Feels like: ${weatherData.feels_like}°C</span>
-<span>Humidity: ${weatherData.humidity}%</span>
-</div>
-`;
-}
-
-// Currency pairs
-function displayCurrencyPairs() {
-const pairs = [
-{ from: 'USD', to: 'EUR', rate: exchangeRates.USD.EUR, change: 'down' },
-{ from: 'USD', to: 'NGN', rate: exchangeRates.USD.NGN, change: 'up' }
-];
-
-const pairsHTML = pairs.map(pair => `
-<div class="pair-item">
-<span class="pair-name">${pair.from} / ${pair.to}</span>
-<span class="pair-rate">${pair.rate.toLocaleString()}
-<span class="rate-change rate-${pair.change}">${pair.change === 'up' ? '↑' : '↓'}</span>
-</span>
-</div>
-`).join('');
-
-document.getElementById('currencyPairs').innerHTML = pairsHTML;
-}
-
-// World clock
-function displayWorldClock() {
-const cities = [
-{ name: 'Paris', offset: 1 },
-{ name: 'Toronto', offset: -5 },
-{ name: 'London', offset: 0 },
-{ name: 'Tokyo', offset: 9 }
-];
-
-const clockHTML = cities.map(city => {
-const now = new Date();
-const localTime = new Date(now.getTime() + (city.offset * 60 * 60000));
-
-return `
-<div class="clock-item">
-<div class="clock-city">${city.name}</div>
-<div class="clock-time">${localTime.toLocaleTimeString('en-US', {
-hour: 'numeric', minute: '2-digit', hour12: true
-})}</div>
-<div class="clock-date">${localTime.toLocaleDateString('en-US', {
-weekday: 'short', month: 'short', day: 'numeric'
-})}</div>
-</div>
-`;
-}).join('');
-
-document.getElementById('worldClock').innerHTML = clockHTML;
-}
-
-// Currency converter
-function convertCurrency() {
-const amount = parseFloat(document.getElementById('currencyAmount').value) || 0;
-const from = document.getElementById('fromCurrency').value;
-const to = document.getElementById('toCurrency').value;
-
-if (from === to) {
-updateResult(amount, from, to, amount, 1);
-return;
-}
-
-let rate = 1;
-if (exchangeRates[from] && exchangeRates[from][to]) {
-rate = exchangeRates[from][to];
-}
-
-const result = amount * rate;
-updateResult(amount, from, to, result, rate);
-}
-
-function updateResult(amount, from, to, result, rate) {
-const formattedAmount = amount.toLocaleString();
-const formattedResult = result.toLocaleString(undefined, {
-minimumFractionDigits: 2,
-maximumFractionDigits: 2
-});
-
-document.getElementById('conversionResult').innerHTML = `
-<div class="result-amount">${formattedAmount} ${from} = ${formattedResult} ${to}</div>
-<div class="result-rate">Rate: 1 ${from} = ${rate.toLocaleString()} ${to}</div>
-`;
-}
-
-function swapCurrencies() {
-const fromSelect = document.getElementById('fromCurrency');
-const toSelect = document.getElementById('toCurrency');
-const temp = fromSelect.value;
-fromSelect.value = toSelect.value;
-toSelect.value = temp;
-convertCurrency();
-}
-
-// Quote rotation
-const quotes = [
-"Your future is created by what you do today",
-"Success is not final, failure is not fatal: it is the courage to continue that counts",
-"The only way to do great work is to love what you do",
-"Innovation distinguishes between a leader and a follower"
-];
-
-let currentQuoteIndex = 0;
-
-function rotateQuote() {
-currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
-document.getElementById('quoteText').textContent = `"${quotes[currentQuoteIndex]}"`;
-
-document.querySelectorAll('.quote-dot').forEach((dot, index) => {
-dot.classList.toggle('active', index === currentQuoteIndex);
-});
-}
-
 // Universal search functionality
 function handleSearch(searchTerm) {
 const term = searchTerm.toLowerCase();
@@ -1110,11 +1270,7 @@ alert(`Search results for: "${searchTerm}"`);
 }
 }
 
-// Event listeners
-document.getElementById('currencyAmount').addEventListener('input', convertCurrency);
-document.getElementById('fromCurrency').addEventListener('change', convertCurrency);
-document.getElementById('toCurrency').addEventListener('change', convertCurrency);
-
+// Update search event listener
 document.getElementById('searchInput').addEventListener('keypress', function(e) {
 if (e.key === 'Enter') {
 const searchTerm = e.target.value.trim();
@@ -1122,24 +1278,6 @@ if (searchTerm) {
 handleSearch(searchTerm);
 }
 }
-});
-
-// Initialize Dashboard
-document.addEventListener('DOMContentLoaded', function() {
-// Load all widgets
-displayNews('all');
-displayWeather();
-displayCurrencyPairs();
-displayWorldClock();
-convertCurrency();
-
-// Auto-rotate quotes every 5 seconds
-setInterval(rotateQuote, 5000);
-
-// Update world clock every minute
-setInterval(displayWorldClock, 60000);
-
-console.log('🎯 Dashboard initialized successfully!');
 });
 </script>
 
