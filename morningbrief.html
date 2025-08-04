@@ -535,10 +535,10 @@ color: white;
 <div class="category-buttons">
 <button class="category-btn active" onclick="filterNews('all')">All</button>
 <button class="category-btn" onclick="filterNews('technology')">Technology</button>
-<button class="category-btn" onclick="filterNews('business')">Business</button>
-<button class="category-btn" onclick="filterNews('sports')">Sports</button>
+<button class="category-btn" onclick="filterNews('remote-work')">Remote Work</button>
+<button class="category-btn" onclick="filterNews('finance')">Finance</button>
 <button class="category-btn" onclick="filterNews('entertainment')">Entertainment</button>
-<button class="category-btn" onclick="filterNews('health')">Health</button>
+<button class="category-btn" onclick="filterNews('productivity')">Productivity</button>
 </div>
 
 <!-- News Grid -->
@@ -576,9 +576,8 @@ color: white;
 </div>
 
 <script>
-// MediaStack API Configuration
-const API_KEY = 'c6a86f8340f9f10b0fbd1425997ea84d';
-const BASE_URL = 'http://api.mediastack.com/v1/news';
+const API_KEY = '3233d1ba834bad744383989945c37de4';
+const BASE_URL = 'https://gnews.io/api/v4/search';
 
 let currentCategory = 'all';
 let allNewsData = [];
@@ -721,7 +720,7 @@ newsGrid.innerHTML = `
 <span class="news-card-source">Source: Business Weekly</span>
 <span>Time: 4h ago</span>
 </div>
-<button class="read-more-btn" onclick="showNewsDetail('business')">Read More</button>
+<button class="read-more-btn" onclick="showNewsDetail('remote-work')">Read More</button>
 </div>
 <div class="news-card">
 <div class="news-card-title">Stock market sees biggest rally this quarter</div>
@@ -729,7 +728,7 @@ newsGrid.innerHTML = `
 <span class="news-card-source">Source: Financial Times</span>
 <span>Time: 6h ago</span>
 </div>
-<button class="read-more-btn" onclick="showNewsDetail('business')">Read More</button>
+<button class="read-more-btn" onclick="showNewsDetail('finance')">Read More</button>
 </div>
 <div class="news-card">
 <div class="news-card-title">Entertainment industry adapts to streaming wars</div>
@@ -756,10 +755,10 @@ event.target.classList.add('active');
 const categoryKeywords = {
 'all': '',
 'technology': 'technology,tech,AI,software,digital',
-'business': 'business,economy,finance,market,stock',
-'sports': 'sports,football,basketball,soccer,tennis',
+'remote work': 'business,jobs,remote,',
+'finance': 'business,economy,finance,market,stock',
 'entertainment': 'entertainment,movie,music,celebrity,hollywood',
-'health': 'health,medical,doctor,disease,medicine'
+'productivity': 'business,economy,finance,market,stock'
 };
 
 const keywords = categoryKeywords[category] || '';
@@ -781,10 +780,10 @@ document.getElementById('newsDetailContainer').style.display = 'block';
 // Update placeholder text based on category
 const categoryNames = {
 'technology': 'Technology',
-'business': 'Business',
-'sports': 'Sports',
+'remote work': 'Remote work',
+'finance': 'Finance',
 'entertainment': 'Entertainment',
-'health': 'Health'
+'productivity': 'Productivity'
 };
 
 document.getElementById('categoryPlaceholder').textContent =
