@@ -470,7 +470,12 @@ font-size: 14px !important;
 
 </head>
 <body>
-
+<!--Mobile Menu Toggle-->
+<button class="mobile-menu-toggle"
+onclick="toggleMobileMenu()"
+id="mobileMenuToggle">
+☰
+</button>
 <!-- Sidebar -->
 
 <div class="sidebar" id="sidebar">
@@ -508,9 +513,10 @@ font-size: 14px !important;
 <div class="nav-text">Settings</div>
 </a>
 
-<div class="nav-item">
+<a href="profilepage.html" class="nav-item">
 <div class="nav-icon">👨‍💼</div>
 <div class="nav-text">Marcus Jones</div>
+</a>
 </div>
 
 </div>
@@ -545,11 +551,11 @@ font-size: 14px !important;
 
 <div class="category-buttons">
 <button class="category-btn active" onclick="filterNews('all')">All</button>
-<button class="category-btn" onclick="filterNews('technology')">Technology</button>
-<button class="category-btn" onclick="filterNews('remote-work')">Remote Work</button>
-<button class="category-btn" onclick="filterNews('finance')">Finance</button>
-<button class="category-btn" onclick="filterNews('entertainment')">Entertainment</button>
-<button class="category-btn" onclick="filterNews('productivity')">Productivity</button>
+<button class="category-btn" onclick="goToNewsPage('technology')">Technology</button>
+<button class="category-btn" onclick="goToNewsPage('remote-work')">Remote Work</button>
+<button class="category-btn" onclick="goToNewsPage('finance')">Finance</button>
+<button class="category-btn" onclick="goToNewsPage('entertainment')">Entertainment</button>
+<button class="category-btn" onclick="goToNewsPage('productivity')">Productivity</button>
 </div>
 
 <!-- News Grid -->
@@ -807,6 +813,27 @@ handleSearch(searchTerm);
 }
 }
 });
+
+// Function to go to news page with category
+function goToNewsPage(category) {
+window.location.href = `newspage.html?category=${category}`;
+}
+
+// Keep existing filterNews for "All" button
+function filterNews(category) {
+if (category === 'all') {
+// Show all news on current page
+fetchNews('');
+// Update active button
+document.querySelectorAll('.category-btn').forEach(btn => {
+btn.classList.remove('active');
+});
+event.target.classList.add('active');
+} else {
+// Go to dedicated news page
+goToNewsPage(category);
+}
+}
 </script>
 
 </body>

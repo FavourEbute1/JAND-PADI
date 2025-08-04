@@ -532,11 +532,84 @@ border: 2px solid #e9ecef;
 background: #e9ecef;
 }
 
+/* Mobile Menu Toggle */
+.mobile-menu-toggle {
+display: none;
+position: fixed;
+top: 20px;
+left: 20px;
+z-index: 1001;
+background: #4D1F96;
+color: white;
+border: none;
+padding: 10px 12px;
+border-radius: 8px;
+cursor: pointer;
+font-size: 18px;
+}
+
+/* Responsive Design Updates */
+@media (max-width: 768px) {
+.mobile-menu-toggle {
+display: block;
+}
+
+.sidebar {
+transform: translateX(-100%) !important;
+transition: transform 0.3s ease !important;
+}
+
+.sidebar.show {
+transform: translateX(0) !important;
+}
+
+.main-content {
+margin-left: 0 !important;
+}
+
+.dashboard-header {
+padding: 0 1rem !important;
+}
+
+.search-input {
+width: 150px !important;
+font-size: 12px !important;
+}
+
+.welcome-text {
+font-size: 16px !important;
+}
+
+.notification-icon {
+width: 35px !important;
+height: 35px !important;
+font-size: 16px !important;
+}
+}
+
+@media (max-width: 480px) {
+.dashboard-header {
+padding: 0 0.5rem !important;
+}
+
+.search-input {
+width: 120px !important;
+}
+
+.welcome-text {
+font-size: 14px !important;
+}
+}
 </style>
 
 </head>
 <body>
-
+<!--Mobile Menu Toggle-->
+<button class="mobile-menu-toggle"
+onclick="toggleMobileMenu()"
+id="mobileMenuToggle">
+☰
+</button>
 <!-- Sidebar -->
 
 <div class="sidebar" id="sidebar">
@@ -567,9 +640,10 @@ background: #e9ecef;
 <div class="nav-icon">⚙</div>
 <div class="nav-text">Settings</div>
 </a>
-<div class="nav-item">
+<a href="profilepage.html" class="nav-item">
 <div class="nav-icon">👨‍💼</div>
 <div class="nav-text">Marcus Jones</div>
+</a>
 </div>
 </div>
 
@@ -933,6 +1007,57 @@ updateProgress();
 console.log('✅ Task Viewer initialized successfully!');
 });
 
+// Mobile menu toggle
+function toggleMobileMenu() {
+const sidebar = document.getElementById('sidebar');
+const toggle = document.getElementById('mobileMenuToggle');
+sidebar.classList.toggle('show');
+toggle.textContent = sidebar.classList.contains('show') ? '✕' : '☰';
+}
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', function(e) {
+const sidebar = document.getElementById('sidebar');
+const toggle = document.getElementById('mobileMenuToggle');
+
+if (window.innerWidth <= 768 &&
+!sidebar.contains(e.target) &&
+!toggle.contains(e.target) &&
+sidebar.classList.contains('show')) {
+sidebar.classList.remove('show');
+toggle.textContent = '☰';
+}
+});
+
+// Universal search functionality
+function handleSearch(searchTerm) {
+const term = searchTerm.toLowerCase();
+if (term.includes('news') || term.includes('brief')) {
+window.location.href = 'morningbrief.html';
+} else if (term.includes('currency') || term.includes('money')) {
+window.location.href = 'currencytools.html';
+} else if (term.includes('task')) {
+window.location.href = 'taskviewer.html';
+} else if (term.includes('time') || term.includes('weather')) {
+window.location.href = 'timezone.html';
+} else if (term.includes('setting')) {
+window.location.href = 'settings.html';
+} else if (term.includes('profile')) {
+window.location.href = 'profilepage.html';
+} else {
+alert(`Search results for: "${searchTerm}"`);
+}
+}
+
+// Update search event listener
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+if (e.key === 'Enter') {
+const searchTerm = e.target.value.trim();
+if (searchTerm) {
+handleSearch(searchTerm);
+}
+}
+});
 </script>
 
 </body>
