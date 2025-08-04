@@ -86,18 +86,20 @@ font: Roboto;
 font-weight: 100;
 }
 
-/* Main Content - Responsive layout */
+/* Main Content */
 .main-content {
-margin-left: 15.625rem; /* 250px */
+margin-left: 15.625rem;
+padding: 0;
 min-height: 100vh;
 display: flex;
 flex-direction: column;
 }
 
-/* Dashboard Header - Responsive without fixed widths */
+/* Dashboard Header*/
 .dashboard-header {
 background-color: white;
 height: 5.375rem; /* 86px */
+min-width: 100vh;
 display: flex;
 justify-content: space-between;
 align-items: center;
@@ -164,7 +166,7 @@ background: rgb(231, 69, 69);
 border-radius: 50%;
 }
 
-/* Profile Content - Flexible and responsive */
+/* Profile Content*/
 .profile-content {
 flex: 1;
 padding: 2rem;
@@ -176,12 +178,14 @@ font-size: 24px;
 margin-bottom: 2rem;
 }
 
-/* Profile Container - Responsive with max-width instead of fixed width */
+/* Profile Container */
 .profile-form-container {
 background: #f5f5f0;
 border-radius: 1rem;
 padding: 2.5rem;
 box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+min-width: 100vh;
+min-height: 100vh;
 }
 
 .profile-layout {
