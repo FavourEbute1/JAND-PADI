@@ -95,7 +95,7 @@ display: flex;
 flex-direction: column;
 }
 
-/* Dashboard Header*/
+/* Dashboard Header  */
 .dashboard-header {
 background-color: white;
 height: 5.375rem; /* 86px */
@@ -108,6 +108,8 @@ box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .welcome-text {
+position: relative;
+left: 60px;
 font-family: Roboto, sans-serif;
 font-size: 1.5rem;
 color: #4D1F96;
@@ -334,116 +336,6 @@ transform: translateY(-1px);
 box-shadow: 0 4px 12px rgba(77, 31, 150, 0.3);
 }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
-.search-input {
-width: 15rem;
-}
-
-.profile-fields {
-grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-}
-}
-
-@media (max-width: 768px) {
-.sidebar {
-transform: translateX(-100%);
-transition: transform 0.3s;
-}
-
-.sidebar.show {
-transform: translateX(0);
-}
-
-.main-content {
-margin-left: 0;
-}
-
-.dashboard-header {
-padding: 1rem;
-}
-
-.header-right {
-gap: 0.75rem;
-}
-
-.search-input {
-width: 12rem;
-}
-
-.welcome-text {
-font-size: 1.25rem;
-}
-
-.profile-content {
-padding: 1rem;
-}
-
-.profile-container,
-.profile-form-container {
-padding: 1.5rem;
-}
-
-.profile-layout {
-grid-template-columns: 1fr;
-gap: 1.5rem;
-text-align: center;
-}
-
-.profile-fields {
-grid-template-columns: 1fr;
-}
-}
-
-@media (max-width: 480px) {
-.dashboard-header {
-flex-direction: column;
-height: auto;
-padding: 1rem;
-gap: 1rem;
-}
-
-.header-right {
-width: 100%;
-justify-content: space-between;
-}
-
-.search-input {
-width: 100%;
-max-width: 15rem;
-}
-
-.profile-content {
-padding: 0.5rem;
-}
-
-.welcome-text {
-font-size: 1.125rem;
-}
-}
-
-/* Mobile sidebar toggle */
-.sidebar-toggle {
-display: none;
-position: fixed;
-top: 1rem;
-left: 1rem;
-z-index: 1001;
-background: #4D1F96;
-color: white;
-border: none;
-padding: 0.75rem;
-border-radius: 0.5rem;
-cursor: pointer;
-font-size: 1.25rem;
-}
-
-@media (max-width: 768px) {
-.sidebar-toggle {
-display: block;
-}
-}
-
 /* Loading animation for save button */
 .save-button.loading {
 pointer-events: none;
@@ -467,74 +359,7 @@ margin-left: 0.5rem;
 100% { transform: rotate(360deg); }
 }
 
-    /* Mobile Menu Toggle */
-.mobile-menu-toggle {
-display: none;
-position: fixed;
-top: 20px;
-left: 20px;
-z-index: 1001;
-background: #4D1F96;
-color: white;
-border: none;
-padding: 10px 12px;
-border-radius: 8px;
-cursor: pointer;
-font-size: 18px;
-}
 
-/* Responsive Design Updates */
-@media (max-width: 768px) {
-.mobile-menu-toggle {
-display: block;
-}
-
-.sidebar {
-transform: translateX(-100%) !important;
-transition: transform 0.3s ease !important;
-}
-
-.sidebar.show {
-transform: translateX(0) !important;
-}
-
-.main-content {
-margin-left: 0 !important;
-}
-
-.dashboard-header {
-padding: 0 1rem !important;
-}
-
-.search-input {
-width: 150px !important;
-font-size: 12px !important;
-}
-
-.welcome-text {
-font-size: 16px !important;
-}
-
-.notification-icon {
-width: 35px !important;
-height: 35px !important;
-font-size: 16px !important;
-}
-}
-
-@media (max-width: 480px) {
-.dashboard-header {
-padding: 0 0.5rem !important;
-}
-
-.search-input {
-width: 120px !important;
-}
-
-.welcome-text {
-font-size: 14px !important;
-}
-}
 </style>
 
 </head>
@@ -545,9 +370,6 @@ onclick="toggleMobileMenu()"
 id="mobileMenuToggle">
 ☰
 </button>
-<!-- Mobile Sidebar Toggle -->
-
-<button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
 
 <!-- Sidebar -->
 
@@ -593,8 +415,8 @@ id="mobileMenuToggle">
 <div class="main-content">
 <!-- Dashboard Header -->
 <div class="dashboard-header">
-<div class="welcome-text">🌞 GOOD MORNING, MARCUS</div>
-<div class="header-right">
+<div class="welcome-text" id="greetingText">🌞 GOOD MORNING, MARCUS</div>
+<div style="display: flex; align-items: center; gap: 20px;">
 <div class="search-container">
 <input type="text" class="search-input" placeholder="Search" id="searchInput">
 <div class="search-icon">🔍</div>
@@ -800,19 +622,6 @@ console.log('Searching for:', searchTerm);
 // Add your search logic here
 });
 
-// Close sidebar when clicking outside on mobile
-document.addEventListener('click', function(e) {
-const sidebar = document.getElementById('sidebar');
-const toggle = document.querySelector('.sidebar-toggle');
-
-if (window.innerWidth <= 768 &&
-!sidebar.contains(e.target) &&
-!toggle.contains(e.target) &&
-sidebar.classList.contains('show')) {
-sidebar.classList.remove('show');
-}
-});
-
 // Form validation on input
 const inputs = document.querySelectorAll('.form-input, .form-select');
 inputs.forEach(input => {
@@ -824,13 +633,36 @@ this.style.borderColor = '#e0e0e0';
 }
 });
 });
+// Time-based greeting function
+function updateGreeting() {
+const now = new Date();
+const hour = now.getHours();
+const greetingElement = document.getElementById('greetingText');
 
+let greeting, emoji;
+
+if (hour >= 5 && hour < 12) {
+greeting = "GOOD MORNING";
+emoji = "🌞";
+} else if (hour >= 12 && hour < 17) {
+greeting = "GOOD AFTERNOON";
+emoji = "☀️";
+} else if (hour >= 17 && hour < 21) {
+greeting = "GOOD EVENING";
+emoji = "🌅";
+} else {
+greeting = "GOOD NIGHT";
+emoji = "🌙";
+}
+
+greetingElement.textContent = `${emoji} ${greeting}, MARCUS`;
+}
 // Initialize the page
 document.addEventListener('DOMContentLoaded', function() {
 console.log('✅ Profile page initialized successfully!');
 });
 
-// Mobile menu toggle
+   // Mobile menu toggle
 function toggleMobileMenu() {
 const sidebar = document.getElementById('sidebar');
 const toggle = document.getElementById('mobileMenuToggle');

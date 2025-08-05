@@ -106,6 +106,8 @@ box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .welcome-text {
+position: relative;
+left: 60px;
 font-family: Roboto, sans-serif;
 font-size: 1.5rem;
 color: #4D1F96;
@@ -524,10 +526,10 @@ id="mobileMenuToggle">
 
 <!-- Main Content -->
 
-<div class="main-content" id="mainContent">
+<div class="main-content">
 <!-- Dashboard Header -->
 <div class="dashboard-header">
-<div class="welcome-text">🌞 GOOD MORNING, MARCUS</div>
+<div class="welcome-text" id="greetingText">🌞 GOOD MORNING, MARCUS</div>
 <div style="display: flex; align-items: center; gap: 20px;">
 <div class="search-container">
 <input type="text" class="search-input" placeholder="Search" id="searchInput">
@@ -760,7 +762,30 @@ await fetchNews(searchTerm);
 }
 }
 });
+// Time-based greeting function
+function updateGreeting() {
+const now = new Date();
+const hour = now.getHours();
+const greetingElement = document.getElementById('greetingText');
 
+let greeting, emoji;
+
+if (hour >= 5 && hour < 12) {
+greeting = "GOOD MORNING";
+emoji = "🌞";
+} else if (hour >= 12 && hour < 17) {
+greeting = "GOOD AFTERNOON";
+emoji = "☀️";
+} else if (hour >= 17 && hour < 21) {
+greeting = "GOOD EVENING";
+emoji = "🌅";
+} else {
+greeting = "GOOD NIGHT";
+emoji = "🌙";
+}
+
+greetingElement.textContent = `${emoji} ${greeting}, MARCUS`;
+}
 // Initialize the page when loaded
 document.addEventListener('DOMContentLoaded', initializePage);
 // Mobile menu toggle
